@@ -12,8 +12,6 @@ const DisplayProductOnSearch = () => {
 
     const { productName } = params
 
-    console.log(productName);
-
 	const [product, setProduct] = useState([]);
 	const [isLoading , setLoading] = useState(true);
 
