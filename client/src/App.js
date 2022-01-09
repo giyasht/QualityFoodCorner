@@ -5,7 +5,7 @@ import UserRoutes from './routes/UserRoutes';
 import AdminRoutes from './routes/AdminRoutes'
 
 const App = () => {
-    
+
     return (
         <>
             <BrowserRouter>

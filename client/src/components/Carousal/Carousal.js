@@ -1,79 +1,106 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import Carousel from "react-elastic-carousel";
-import bug1 from "./../../images/offer.jfif";
+import { arrayBufferToBase64 } from "../../assets/BufferToBase64";
 import "./Carousal.css";
+import Loading from "../Loading/Loading";
+const API = process.env.REACT_APP_BACKEND_API
 
 const Carousal = () => {
-	let offers = [
-		{
-			name: "Diwali Bonanza",
-			features: ["Minimum order Rs 699", "coke 500ml FREE"],
-		},
-		{
-			name: "Cricket Mania",
-			features: ["Watch cricket with your family", "Choclate Muffin FREE"],
-		},
-		{
-			name: "Chilling Sunday",
-			features: ["Minimum order Rs 999", "Mustard-Mayo Dip FREE"],
-		},
-		{
-			name: "Winter welcome",
-			features: ["Welcome winter with hot deal", "coke 1 lit FREE"],
-		},
-		{
-			name: "Classic Deal",
-			features: ["Give your Family a treat", "Flat 499Rs off"],
-		},
-  	];
+	
+	const [offers, setOffers] = useState([]);
 
+	const [isBusy, setBusy] = useState(true)
+
+	useEffect(() => {
+
+		const getAllOffers = async () => {
+
+			try {
+		
+				if ( offers.length === 0 ) {
+
+					const response = await fetch(`${API}/offer/all`, {
+						method: "GET",
+						headers: {
+							Accept: "application/json",
+						},
+					})
+			
+					if (response) {
+						var data = await response.json();
+						setOffers(data);
+						setBusy(false);
+					}
+				}
+				
+				
+			} catch (error) {
+				return console.log(error);
+			}
+		}
+
+		getAllOffers()
+
+	}, [offers.length])
+	
+	
 	const breakPoints = [
 		{ width: 1, itemsToShow: 1 },
 		{ width: 768, itemsToShow: 2 },
 		{ width: 1200, itemsToShow: 3 },
 	];
 
+	const carouselAttributes = {
+		breakPoints:breakPoints,
+		disableArrowsOnEnd:true, 
+		pagination:true, 
+		showArrows:true, 
+		enableAutoPlay:true,
+		autoPlaySpeed:6000, 
+		enableSwipe:false
+	}
+		
   	return (
 		<div className="bodyy">
 			<div className="py-4">
 				<h2 className="text-center text-uppercase pb-4" style={{color:"var(--darkyellow)"}}>Deals of the day</h2>
 				<div className="carousel">
-					<Carousel
-						breakPoints={breakPoints}
-						disableArrowsOnEnd={true}
-						pagination={true}
-						showArrows={true}
-						enableAutoPlay={true}
-						autoPlaySpeed={3000}
-						enableSwipe={false}
-					>
-						{offers.map((offer, i) => (
-						<div key={i}>
-							<div className="p-3 m-2 rounded border">
-								<div>
-									<div>
-										<img
-											style={{
-											width: "350px",
-											height: "150px",
-											padding: "10px",
-											borderRadius: "6px",
-											}}
-											src={bug1}
-											alt="offerImg"
-										/>
-									</div>
-									<div className="pl-3">
-									<h5 className="text-center heading py-2">{offer.name}</h5>
-										<ul className="pl-3 lists ">
-											<li>{offer.features[0]}</li>
-											<li>{offer.features[1]}</li>
-										</ul>
-									</div>
-								</div>
-							</div>
-						</div>
-						))}
+					<Carousel {...carouselAttributes}>
+						{
+							isBusy 	? 	(<Loading />) 
+									:
+										offers && offers.map( function(offer, i){
+
+											const { name, feature, isActive, offerImage } = offer;
+
+											var img, binarystring;
+
+											if(offerImage){
+												binarystring = arrayBufferToBase64(offerImage.data.data)
+												img = `data:image/jpeg;base64, ${binarystring}`;
+											}
+
+											return 	isActive 	? 	<div key={i}>
+																		<div className="p-3 m-2 rounded border carousalDiv">
+																			<div>
+																				<div>
+																					<img src={img} alt="offerImg" style={{ width: "350px", height: "150px", padding: "10px", borderRadius: "6px", }} />
+																				</div>
+																				<div className="pl-3">
+																					<h5 className="text-center heading py-2">{name}</h5>
+																					<ul className="pl-3 lists ">
+																						<li>{feature[0]}</li>
+																						<li>{feature[1]}</li>
+																					</ul>
+																				</div>
+																			</div>
+																		</div>
+																	</div> 
+																: 	null
+												
+											
+										})
+						}
 					</Carousel>
 				</div>
 			</div>

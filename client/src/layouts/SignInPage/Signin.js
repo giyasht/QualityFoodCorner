@@ -9,15 +9,15 @@ import Swal from 'sweetalert2'
 const Signin = () => {
 
     const [values, setValues] = useState({
-        email: "p@gmail.com",
-        password: "Pawan@0843",
+        email: "",
+        password: "",
         error: "",
         didRedirect: false
     });
 
-    // loading,
     const { email, password, error,  didRedirect } = values;
 
+    // To Fire SweetAlert on Successful User Authentication
     const { user } = isAuthenticated();
 
     const handleChange = name => event => {  
@@ -93,8 +93,6 @@ const Signin = () => {
 
     const signInForm = () => {
         return(
-
-
             <div className="Outerlogin " style={{ backgroundImage: "url(" + back + ")" }}>
                 <div className="login-page">
                     <div className="form">
@@ -105,8 +103,10 @@ const Signin = () => {
                         </div>
                     </div>
                     <form className="login-form">
-                        <input type="email" value={email} onChange={handleChange("email")} placeholder="Username" />
-                        <input type="password" value={password} onChange={handleChange("password")} placeholder="Password" />
+                        <label htmlFor="email">Username</label>
+                        <input type="email" value={email} onChange={handleChange("email")} placeholder="p@gmail.com" id="email"/>
+                        <label htmlFor="password">Password</label>
+                        <input type="password" value={password} onChange={handleChange("password")} placeholder="********" id="password"/>
                         <button onClick={onSubmit} >Login</button>
                         <p className="message">
                             Not registered? <NavLink to="/signup">Create an account</NavLink>
@@ -117,9 +117,7 @@ const Signin = () => {
                     </form>
                     </div>
                 </div>
-            </div>
-
-            
+            </div>            
         )
     };
 

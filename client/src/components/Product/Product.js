@@ -3,12 +3,12 @@ import "./Product.css";
 import burger from './../../images/burger.jpg'
 import { isAuthenticated } from "../../auth";
 import { useNavigate } from "react-router-dom";
+import { arrayBufferToBase64 } from './../../assets/BufferToBase64'
+const API = process.env.REACT_APP_BACKEND_API
 
 const Product = (props) => {
 
 	const navigate = useNavigate()
-
-	const API = 'http://127.0.0.1:8000/api'
 
 	// sold, stock,
 	const {_id, name, description, price,  photo, photoUrl } = props
@@ -17,16 +17,6 @@ const Product = (props) => {
 
 	var img, binarystring;
 	
-	function arrayBufferToBase64( buffer ){
-		var binary = '';
-		var bytes = new Uint8Array(buffer);
-		var len = bytes.byteLength;
-		for (var i = 0; i < len; i++) {
-			binary += String.fromCharCode( bytes[ i ] );
-		}
-		return window.btoa( binary );
-	}
-
 	if(photo){
 		binarystring = arrayBufferToBase64(photo.data.data)
 		img = `data:image/jpeg;base64, ${binarystring}`;
@@ -41,10 +31,10 @@ const Product = (props) => {
 
 			const { user, token } = isAuthenticated();
 
-			let data = JSON.stringify({productId:_id});
+			let data = JSON.stringify({ productId: _id });
 
 			if (user) {
-				const response = await fetch(`${API}/user/cartItem/${user._id}`, {
+				const response = await fetch(`${API}/user/add/cartItem/${user._id}`, {
 					method: "PUT",
 					headers: {
 						Accept: "application/json",

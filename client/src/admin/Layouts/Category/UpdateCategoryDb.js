@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import Swal from 'sweetalert2'
 import { isAuthenticated } from "../../../auth/index"
 import { getCategoryByName, updateCategory } from "../../Helper/Category/index";
-import AdminSideBar from '../../../components/AdminSideBar/AdminSideBar';
+import AdminSideBar from '../../components/AdminSideBar/AdminSideBar';
 
 const UpdateCategoryDb = () => {
 
@@ -24,7 +24,6 @@ const UpdateCategoryDb = () => {
     });
 
     const {updatedName, updatedError, updatedSuccess} = updatedCategory;
-
 
     const { user, token } = isAuthenticated();
 
@@ -49,8 +48,6 @@ const UpdateCategoryDb = () => {
 
             const category = await getCategoryByName(name);
 
-            console.log(category);
-
             setData(category);
 
             if (category.error) {
@@ -65,22 +62,33 @@ const UpdateCategoryDb = () => {
     };
 
     const SearchCategoryDatabaseForm = () => {
+
+        var rowStyles = {
+            width:"70%", 
+            height:"100vh", 
+            display:"flex",
+            justifyContent:"center",
+            margin:"auto",
+            marginTop:"50px",
+            padding:"10px",
+        }
+        
         return (
-            <div className="row">
-                <div className="col-md-6 offset-sm-3 text-left">
-                    <h1>Search Category</h1>
+            <div className="row" style={rowStyles}>
+                <div className="">
+                    <h1 style={{color:"white"}}>Search Category</h1>
+                    <br />
                     <form>
                         <div className="form-group">
-                            <label className="form-control-label">Search Category by name</label>
-                            <input className="form-control" type="text" onChange={handleChange('name')} value={name} />
+                            <input className="feedback-input" type="text" onChange={handleChange('name')} value={name} placeholder="Name of Category"/>
                         </div>
-                        <button onClick={onSubmit} className="btn btn-primary" >Search</button>
+                        <br />
+                        <button type="submit" onClick={onSubmit}>Search</button>
                     </form>
                 </div>
             </div>
         )
     }
-
 
     const updateCategoryOnSubmit = async (event) => {
 
@@ -111,16 +119,28 @@ const UpdateCategoryDb = () => {
     }
 
     const UpdateCategoryDatabaseForm = () => {
+
+        var rowStyles = {
+            width:"100%", 
+            height:"100vh", 
+            display:"flex",
+            justifyContent:"center",
+            margin:"auto",
+            marginTop:"50px",
+            padding:"10px",
+        }
+
         return (
-            <div className="row">
-                <div className="col-md-6 offset-sm-3 text-left">
-                    <h1>Update Category</h1>
+            <div className="row" style={rowStyles}>
+                <div>
+                    <h1 style={{color:"white"}}>Update Category</h1>
+                    <br />
                     <form>
                         <div className="form-group">
-                            <label className="form-control-label">Update Category</label>
-                            <input className="form-control" type="text" onChange={handleChangeUpdatedValues('updatedName')} value={updatedName} />
+                            <input className="form-control" type="text" onChange={handleChangeUpdatedValues('updatedName')} value={updatedName} placeholder="Update Name of Category"/>
                         </div>
-                        <button onClick={updateCategoryOnSubmit} className="btn btn-primary" >Update</button>
+                        <br />
+                        <button type="submit" onClick={updateCategoryOnSubmit}>Update</button>
                     </form>
                 </div>
             </div>
@@ -172,8 +192,10 @@ const UpdateCategoryDb = () => {
 
     return (
         <>
-            <div style={{overflow:"hidden"}}>
+            <div style={{overflow:"hidden", display:"flex", backgroundColor:"var(--lightblack)"}}>
                 <AdminSideBar/>
+
+                <div style={{display:"block"}}>
 
                 {
                     SearchCategoryDatabaseForm()
@@ -192,6 +214,7 @@ const UpdateCategoryDb = () => {
                                     </>
                                 )
                 }
+                </div>
             </div>
         </>
     )

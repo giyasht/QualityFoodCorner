@@ -1,10 +1,10 @@
 const express = require('express');
 const router = express.Router();
 
-const {getUserById} = require('../controllers/user');
-const {isSignedin, isAuthenticated, isAdmin } = require('../controllers/auth');
-const {getCategoryByName} = require('../controllers/category')
-const {getProductById,getProductByName, createProduct, getProduct, photo, updateProduct, deleteProduct, getAllProducts, getAllProductsByCategory ,getAllUniqueCategories} = require('../controllers/product');
+const { getUserById } = require('../controllers/user');
+const { isSignedin, isAuthenticated, isAdmin } = require('../controllers/auth');
+const { getCategoryByName } = require('../controllers/category')
+const { getProductById, getProductByName, createProduct, getProduct, photo, updateProduct, deleteProduct, getAllProducts, getAllProductsByCategory, getAllUniqueCategories } = require('../controllers/product');
 
 // Params
 router.param('userId', getUserById);
@@ -13,33 +13,39 @@ router.param('productName', getProductByName);
 router.param('categoryName', getCategoryByName);
 
 
-// Create Route
-router.post(
-    '/product/create/:userId',
-    isSignedin, 
-    isAuthenticated, 
-    isAdmin,  
-    createProduct
-);
-
-
-// Read Route
+// @desc Get Product By ID
+// @access Public
 router.get('/product/:productId', getProduct );
-router.get('/product/photo/:productId', photo);
-router.get("/product/name/:productName", getProduct);
 
+// @desc Get Product By Name
+// @access Public
+router.get('/product/name/:productName', getProduct);
 
-// Update Route
-router.put('/product/:productId/:userId', isSignedin, isAuthenticated, isAdmin, updateProduct);
-
-// Delete Route
-router.delete('/product/:productId/:userId', isSignedin, isAuthenticated, isAdmin, deleteProduct);
-
-// Listing Route
+// @desc Get All Products
+// @access Public
 router.get('/products', getAllProducts);
 
+// @desc Get All Products By Category
+// @access Public
 router.get('/products/:categoryName', getAllProductsByCategory);
 
-router.get('/products/categories', getAllUniqueCategories)
+// @desc Get All Unique Categories (Min. 1 Product)
+// @access Public
+router.get('/products/all/categories', getAllUniqueCategories)
+
+router.get('/product/photo/:productId', photo);
+
+// @desc Create a Product
+// @access Admin
+router.post('/product/create/:userId', isSignedin, isAuthenticated, isAdmin, createProduct);
+
+// @desc Update a Product
+// @access Admin
+router.put('/product/:productId/:userId', isSignedin, isAuthenticated, isAdmin, updateProduct);
+
+// @desc Delete a Product
+// @access Admin
+router.delete('/product/:productId/:userId', isSignedin, isAuthenticated, isAdmin, deleteProduct);
+
 
 module.exports = router;

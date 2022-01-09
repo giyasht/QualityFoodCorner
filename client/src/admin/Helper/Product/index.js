@@ -17,7 +17,7 @@ export const addProduct = async (userId, token, product) => {
         formData.append('photo', product.photo)
         formData.append('photoUrl', product.photoUrl)
 
-        const response = await axios.post(`${API}/product/create/${userId}`, formData ,{
+        const response = await axios.post(`${API}/product/create/${userId}`, formData, {
             headers: {
                 Accept: "application/json",
                 Authorization: `Bearer ${token}`,

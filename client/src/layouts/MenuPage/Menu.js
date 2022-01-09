@@ -33,13 +33,10 @@ function Items({ currentItems }) {
 	);
 }
 
-
-
 const Menu = () => {
 
 	let params = useParams();
-	console.log(params.category);
-
+	
 	const [data, setData] = useState([]);
 
 	const [isLoading , setLoading] = useState(true);
@@ -82,8 +79,6 @@ const Menu = () => {
 					if(response){
 						datanow = await response.json()
 					}
-	
-					console.log(datanow);
 
 					!datanow.error ? setData(datanow) : setData([])
 				}
@@ -110,19 +105,25 @@ const Menu = () => {
 	const itemsPerPage = 6;
 
 	useEffect(() => {
+		
 		// Fetch items from another resources.
 		const endOffset = itemOffset + itemsPerPage;
-		console.log(`Loading items from ${itemOffset} to ${endOffset}`);
+		
+		// console.log(`Loading items from ${itemOffset} to ${endOffset}`);
 		setCurrentItems(data.slice(itemOffset, endOffset));
 		setPageCount(Math.ceil(data.length / itemsPerPage));
+
 	}, [itemOffset, itemsPerPage, data]);
 
 	const handlePageClick = (event) => {
+		
 		const newOffset = (event.selected * itemsPerPage) % data.length;
-		console.log(
-			`User requested page number ${event.selected}, which is offset ${newOffset}`
-		);
+		// console.log(
+		// 	`User requested page number ${event.selected}, which is offset ${newOffset}`
+		// );
+		
 		setItemOffset(newOffset);
+	
 	};
 
     return (
@@ -161,13 +162,37 @@ const Menu = () => {
 								<NavLink to="/menu/chinese" onClick={ () => {
 									setLoading(true)
 									setItemOffset(0)
-								}}>chinese</NavLink>
+								}}>Chinese</NavLink>
+							</li>
+							<li>
+								<NavLink to="/menu/indian main course" onClick={ () => {
+									setLoading(true)
+									setItemOffset(0)
+								}}>Indian Main Course</NavLink>
+							</li>
+							<li>
+								<NavLink to="/menu/indian breads" onClick={ () => {
+									setLoading(true)
+									setItemOffset(0)
+								}}>Indian Breads</NavLink>
+							</li>
+							<li>
+								<NavLink to="/menu/desserts" onClick={ () => {
+									setLoading(true)
+									setItemOffset(0)
+								}}>Desserts</NavLink>
 							</li>
 							<li>
 								<NavLink to="/menu/beverages" onClick={ () => {
 									setLoading(true)
 									setItemOffset(0)
 								}}>Beverages</NavLink>
+							</li>
+							<li>
+								<NavLink to="/menu/speaciality tea" onClick={ () => {
+									setLoading(true)
+									setItemOffset(0)
+								}}>Speaciality Tea</NavLink>
 							</li>
 						</ul>
 					</nav>
@@ -181,7 +206,6 @@ const Menu = () => {
 									: 	((!data.error && data.length !== 0)  
 									    
 										?  	<>
-												{/* {console.log(data[0]._id)} */}
 												<Items currentItems={currentItems} />
 												<ReactPaginate
 													breakLabel="..."

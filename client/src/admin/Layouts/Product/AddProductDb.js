@@ -3,7 +3,7 @@ import Swal from 'sweetalert2'
 import { useNavigate } from "react-router-dom";
 import { isAuthenticated } from "./../../../auth/index"
 import { addProduct } from "./../../Helper/Product/index";
-import AdminSideBar from './../../../components/AdminSideBar/AdminSideBar';
+import AdminSideBar from '../../components/AdminSideBar/AdminSideBar';
 
 
 const AddProductDb = () => {
@@ -79,41 +79,46 @@ const AddProductDb = () => {
     }, [error, success])
 
     const AddProductDatabaseForm = () => {
+
+        var rowStyles = {
+            width:"70%", 
+            height:"100%", 
+            display:"flex",
+            justifyContent:"center",
+            margin:"auto",
+            marginTop:"10px",
+            padding:"100px",
+        }
+
         return (
-            <div className="row">
-                <div className="col-md-6 offset-sm-3 text-left">
-                    <h1>Create Product</h1>
+            <div className="row" style={rowStyles}>
+                <div>
+                    <h1 style={{color:"white"}}>Create Product</h1>
+                    <br />
                     <form>
                         <div className="form-group">
-                            <label className="form-control-label">Name of Product</label>
-                            <input className="form-control" type="text" onChange={handleChange('name')} value={name} />
+                            <input className="feedback-input" type="text" onChange={handleChange('name')} value={name} placeholder='Name of Product' />
                         </div>
                         <div className="form-group">
-                            <label className="form-control-label">Description</label>
-                            <input className="form-control" type="text" onChange={handleChange('description')} value={description} />
+                            <input className="feedback-input" type="text" onChange={handleChange('description')} value={description} placeholder='Description'/>
                         </div>
                         <div className="form-group">
-                            <label className="form-control-label">Price</label>
-                            <input className="form-control" type="text" onChange={handleChange('price')} value={price} />
+                            <input className="feedback-input" type="text" onChange={handleChange('price')} value={price} placeholder='Price' />
                         </div>
                         <div className="form-group">
-                            <label className="form-control-label">Category</label>
-                            <input className="form-control" type="text" onChange={handleChange('category')} value={category} />
+                            <input className="feedback-input" type="text" onChange={handleChange('category')} value={category} placeholder='Category'/>
                         </div>
                         <div className="form-group">
-                            <label className="form-control-label">Stock</label>
-                            <input className="form-control" type="text" onChange={handleChange('stock')} value={stock} />
+                            <input className="feedback-input" type="text" onChange={handleChange('stock')} value={stock} placeholder='Stock'/>
                         </div>
                         <div className="form-group">
-                            <label className="form-control-label">Image URL</label>
-                            <input className="form-control" type="text" onChange={handleChange('photoUrl')} value={photoUrl} />
+                            <input className="feedback-input" type="text" onChange={handleChange('photoUrl')} value={photoUrl} placeholder='Image URL'/>
                         </div>
                         <div className="form-group">
-                            <label className="form-control-label">Select Product Image</label>
-                            {/* == null ? '' : photo */}
-                            <input type="file" className="form-control-file" id="myfile" onChange={handleNewImage('photo')} value={photo} />
+                            <input type="file" className="form-control-file feedback-input" id="myfile" onChange={handleNewImage('photo')} value={photo} placeholder='Select Product Image'/>
                         </div>
-                        <button onClick={onSubmit} className="btn btn-primary" >Submit</button>
+                        <br />
+                        <button type="submit" onClick={onSubmit}>Submit</button>
                     </form>
                 </div>
             </div>
@@ -122,7 +127,7 @@ const AddProductDb = () => {
 
     return (
         <>
-            <div style={{overflow:"hidden"}}>
+            <div style={{ display:"flex", backgroundColor:"var(--lightblack)"}}>
                 <AdminSideBar/>
                 {AddProductDatabaseForm()}
             </div>

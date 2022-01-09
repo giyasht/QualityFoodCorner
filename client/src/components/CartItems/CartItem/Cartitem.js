@@ -1,11 +1,14 @@
 import React, { useState, useEffect } from "react";
 import "./Cartitem.css";
 import { isAuthenticated } from "./../../../auth/index";
+import { arrayBufferToBase64 } from "../../../assets/BufferToBase64";
 import Loading from "../../Loading/Loading";
+import { useNavigate } from "react-router-dom";
 const API = process.env.REACT_APP_BACKEND_API
 
 const Cartitem = (props) => {
 
+	const navigate = useNavigate()
 	
 	const {id} = props
 
@@ -42,21 +45,41 @@ const Cartitem = (props) => {
 		getItemFromDb();
 	}, [id]);
 
+	async function removeItemFromCart() {
+
+		try {
+
+			const { user, token } = isAuthenticated();
+
+			let data = JSON.stringify({ productId: id });
+
+			const response = await fetch(`${API}/user/remove/cartItem/${user._id}`, {
+				method: "PUT",
+				headers: {
+					Accept: "application/json",
+					"Content-Type": "application/json",
+					Authorization: `Bearer ${token}`,
+				},
+				body: data
+			});
+			
+			if (response && user) {
+				setLoading(false)
+			}
+			
+			navigate("/")
+			navigate("/mycart")
+			// window.location.reload(false);
+
+		} catch (error) {
+			return console.log(error);
+		}
+	}
+
 	const { name, price, photo, photoUrl } = itemfromdb;
 	
 	var img, binarystring;
-	function arrayBufferToBase64(buffer) {
-
-		var binary = "";
-		var bytes = new Uint8Array(buffer);
-		var len = bytes.byteLength;
-		
-		for (var i = 0; i < len; i++) {
-			binary += String.fromCharCode(bytes[i]);
-		}
-		return window.btoa(binary);
-	}
-
+	
 	if (photo) {
 		binarystring = arrayBufferToBase64(photo.data.data);
 		img = `data:image/jpeg;base64, ${binarystring}`;
@@ -79,11 +102,12 @@ const Cartitem = (props) => {
 							<div className="recipe-content-cart">
 								<div className="recipe-title-cart">
 									<span>{name}</span>
-									<i className="far fa-trash-alt"></i>
+									<button className="far fa-trash-alt" type="button" onClick={() => removeItemFromCart()}>
+									</button>
 								</div>
 								<div className="try">
 									<button className="recipe-save addcart" type="button">₹{price}</button>
-									<div className="recipe-control">
+									{/* <div className="recipe-control">
 									<div style={{ color: "inherit", display: "flex" }}>
 										<div id="minus" className="control-btn">
 											<i className="fas fa-minus"></i>
@@ -93,7 +117,7 @@ const Cartitem = (props) => {
 											<i className="fas fa-plus"></i>
 										</div>
 									</div>
-									</div>
+									</div> */}
 								</div>
 							</div>	
 						</article>

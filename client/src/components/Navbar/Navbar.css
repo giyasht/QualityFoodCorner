@@ -55,8 +55,7 @@ a.custom-card:hover {
   list-style: none;
 }
 
-.navbar-links li a,
-span {
+.navbar-links li a, span {
   display: block;
   text-decoration: none;
   color: #bbbbbb;
@@ -90,6 +89,31 @@ span {
   border-radius: 10px;
 }
 
+.buttttt{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  float: left;
+}
+.toggle-buttonn {
+  cursor: pointer;
+  display: flex;
+  position: absolute;
+  top: 1.5rem;
+  right: 1rem;
+  flex-direction: column;
+  justify-content: space-between;
+  width: 30px;
+  height: 21px;
+}
+
+.toggle-buttonn .bar-white {
+  height: 3px;
+  width: 100%;
+  background-color: white;
+  border-radius: 10px;
+}
+
 @media (max-width: 800px) {
   .navbar {
     flex-direction: column;
@@ -97,6 +121,10 @@ span {
   }
 
   .toggle-button {
+    display: flex;
+  }
+
+  .toggle-buttonn {
     display: flex;
   }
 

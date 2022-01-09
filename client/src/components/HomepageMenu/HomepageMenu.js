@@ -26,7 +26,7 @@ const HomepageMenu = () => {
 		},
 		{
 			name: "Meal",
-			url: "all",
+			url: "indian main course",
 			img: "https://thumbs.dreamstime.com/b/collection-take-away-foil-boxes-healthy-food-set-containers-meals-top-view-free-copy-space-164637874.jpg",
 		},
 		
