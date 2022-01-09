@@ -10,14 +10,9 @@ const SearchPage = () => {
 
     const [search, setSearch] = useState('');
 
-	console.log("searh got =>>" ,search);
-
-
 	const handleSearchChange = search => event => {  
         setSearch(event.target.value);
     };
-
-	
 
 	const onSubmit = async (event) => {
 
@@ -76,7 +71,7 @@ const SearchPage = () => {
 				<div className="row prod-row" style={{backgroundColor:"var(--lightblack)"}}>
 					<div className="search">
 						<input type="text" className="searchTerm" placeholder="Type to search" value={search} onChange={handleSearchChange('search')}/>
-						<button type="submit" className="searchButton" onClick={onSubmit}>
+						<button className="searchButton" onClick={onSubmit}>
 							<i className="fas fa-search"></i>
 						</button>
 					</div>

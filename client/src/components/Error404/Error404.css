@@ -15,11 +15,13 @@
   inherits: false;
   syntax: '<integer>';
 }
+
 @property --swing-y {
   initial-value: 0;
   inherits: false;
   syntax: '<integer>';
 }
+
 .Error404body {
   min-height: 100vh;
   display: flex;
@@ -45,6 +47,7 @@
   -webkit-background-clip: text;
   color: transparent;
 }
+
 .Error404:after {
   animation: swing var(--speed) infinite alternate ease-in-out;
   content: "404";
@@ -55,6 +58,7 @@
   filter: blur(1.5vmin);
   transform: scale(1.05) translate3d(0, 12%, -10vmin) translate(calc((var(--swing-x, 0) * 0.05) * 1%), calc((var(--swing-y) * 0.05) * 1%));
 }
+
 .cloak {
   animation: swing var(--speed) infinite alternate-reverse ease-in-out;
   height: 100%;
@@ -63,6 +67,7 @@
   transform: rotate(calc(var(--swing-x) * -0.25deg));
   background: radial-gradient(40% 40% at 50% 42%, transparent, #000 35%);
 }
+
 .cloak__wrapper {
   position: fixed;
   top: 0;
@@ -71,6 +76,7 @@
   right: 0;
   overflow: hidden;
 }
+
 .cloak__container {
   height: 250vmax;
   width: 250vmax;
@@ -79,12 +85,15 @@
   left: 50%;
   transform: translate(-50%, -50%);
 }
+
 .info {
   text-align: center;
   line-height: 1.5;
   max-width: clamp(16rem, 90vmin, 25rem);
 }
-.info > p {
+
+.info:after a {
+  color: white;
   margin-bottom: 3rem;
   font-weight: 100;
 }

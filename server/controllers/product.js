@@ -7,6 +7,9 @@ const { sortBy } = require('lodash');
 const path = require("path");
 const { validationResult } = require('express-validator');
 
+// @desc Get Product By ID
+// @route GET /api/product/:productId
+// @access Public
 exports.getProductById = async (req, res, next, id) => {
 
     try {
@@ -16,7 +19,14 @@ exports.getProductById = async (req, res, next, id) => {
         if(product){
             req.product = product;
         }
+
+        else {
+            return res.status(400).json({
+                error: 'Not found product by ID'
+            });
+        }
         
+        // It will go to next function with product info in req.product 
         next();
 
 
@@ -28,23 +38,28 @@ exports.getProductById = async (req, res, next, id) => {
 
 }
 
+// @desc Get Product By Name
+// @route GET /api/product/:productName
+// @access Public
 exports.getProductByName = async (req, res, next, name) => {
 
     try {
 
         const product = await Product.findOne( { name: name } );
 
-        if(product){
+        if (product) {
             req.product = product;
-        }else{
-            res.status(400).json({
+        }
+        
+        else {
+            return res.status(400).json({
                 error: 'Not found product by name'
             });
         }
 
+        // It will go to next function with product info in req.product 
         next();
 
-        // It will go to function getCategory() and will give response
         
     } catch (error) {
         return res.status(400).json({
@@ -53,6 +68,99 @@ exports.getProductByName = async (req, res, next, name) => {
     }
 }
 
+// @desc Get All Products
+// @route GET /api/products
+// @access Public
+exports.getAllProducts = async (req, res) => {
+
+	try {
+
+		let limit = req.query.limit ? parseInt(req.query.limit) : 100;
+		let sortBy = req.query.sortBy ? req.query.sortBy : '_id';
+
+		const products = await Product.find()
+									.populate('category')
+									.select('-photo')
+									.sort([[sortBy, 'asc']])
+									.limit(limit);
+
+		if (products) {
+			return res.json(products);
+		}
+		
+	} catch (error) {
+		return res.status(400).json({
+			error: "No products found"
+		})
+	}
+}
+
+// @desc Get a Product
+// @access Public
+exports.getProduct = (req, res) => {
+	
+	try {
+		// req.product.photo = undefined
+		return res.json(req.product)
+
+	} catch (error) {
+		return res.json({
+			error: "404 Not Found"
+		})
+	}
+}
+
+// @desc Get Products By Category
+// @route GET /api/products/:categoryName
+// @access Public
+exports.getAllProductsByCategory = async (req, res) => {
+
+    try {
+
+        let categoryId = req.category ? (req.category.id) : '619cb6bddafcf9142ec6f52a';
+
+        const products = await Product.find({ category : categoryId  })									
+                                    .populate('category')
+									// .select('photo')
+									// .sort([[sortBy, 'asc']])
+									// .limit(limit);
+
+        if (products) {
+            return res.json(products);
+        }
+
+    } catch (error) {
+		
+		return res.status(400).json({
+			error: "No products found"
+		})
+	}
+}
+
+// @desc Get all Categories (Min. 1 Product)
+// @route GET /api/products/all/categories
+// @access Public
+exports.getAllUniqueCategories = async (req, res) => {
+
+	try {
+		
+		const categories = await Product.distinct('category');
+
+		if (categories) {
+			return res.json(categories);
+		}
+
+	} catch (error) {
+		
+		return res.status(400).json({
+			error: "No Category Found"
+		})
+	}
+}
+
+// @desc Create a Product
+// @route POST /api/offer/all
+// @access Admin
 exports.createProduct = async (req, res) => {
 
     try {
@@ -102,21 +210,13 @@ exports.createProduct = async (req, res) => {
                 })
             }
 
-
-
             const categoryObject = await Category.findOne({ name: fields.category})
 
             if (!categoryObject) {
                 return res.status(400).json({
                     error: `${fields.category} Catgeory does not exists !`
                 })                ;
-            } 
-
-            // if (!name || !description || !price || !category || !stock ) {
-            //     return res.status(400).json({
-            //         error: "Please Include All Fields"
-            //     })
-            // }
+            }
 
             const updatedFields = {
                 name: fields.name,
@@ -165,29 +265,9 @@ exports.createProduct = async (req, res) => {
     }
 }
 
-exports.getProduct = (req, res) => {
-	
-	try {
-		
-		req.product.photo = undefined
-		return res.json(req.product)
-
-	} catch (error) {
-		res.json({
-			error: "404 Not Found"
-		})
-	}
-}
-
-exports.photo = (req, res, next) => {
-
-	if (req.product.photo.data) {
-		res.set('Content-Type', req.product.photo.contentType);
-		return res.send(req.product.photo.data);
-	}
-	next();
-}
-
+// @desc Update a Product
+// @route PUT /api/offer/all
+// @access Admin
 exports.updateProduct = async (req, res) => {
 
 	try {
@@ -226,11 +306,11 @@ exports.updateProduct = async (req, res) => {
 				const productUpdated = await product.save()
 
 				if (productUpdated) {
-					res.json(productUpdated)
+					return res.json(productUpdated)
 				}
 
 			} catch (error) {
-				res.status(400).json({
+				return res.status(400).json({
 					error: "Updation Failed"
 				})
 			}
@@ -238,12 +318,15 @@ exports.updateProduct = async (req, res) => {
         })
         
     } catch (error) {
-        res.status(400).json({
+        return res.status(400).json({
             error: "Saving Failed"
         })
     }
 }
 
+// @desc Delete a Product
+// @route DELETE /api/offer/all
+// @access Admin
 exports.deleteProduct = async (req, res) => {
 	
 	try {
@@ -258,79 +341,26 @@ exports.deleteProduct = async (req, res) => {
         }
 
 	} catch (error) {
-		res.status(400).json({
+		return res.status(400).json({
             error: `Failed to delete this product`
         })
 	}
 }
 
-exports.getAllProducts = async (req, res) => {
+// @desc 
+// @route 
+// @access Public
+exports.photo = (req, res, next) => {
 
-	try {
-
-		let limit = req.query.limit ? parseInt(req.query.limit) : 100;
-		let sortBy = req.query.sortBy ? req.query.sortBy : '_id';
-
-		const products = await Product.find()
-									.populate('category')
-									.select('-photo')
-									.sort([[sortBy, 'asc']])
-									.limit(limit);
-
-		if (products) {
-			res.json(products);
-		}
-		
-	} catch (error) {
-		
-		res.status(400).json({
-			error: "No products found"
-		})
+	if (req.product.photo.data) {
+		res.set('Content-Type', req.product.photo.contentType);
+		return res.send(req.product.photo.data);
 	}
+	next();
 }
-
-exports.getAllProductsByCategory = async (req, res) => {
-
-    try {
-
-        let categoryId = req.category ? (req.category.id) : '619cb6bddafcf9142ec6f52a';
-
-        const products = await Product.find({ category : categoryId  })									
-                                    .populate('category')
-									// .select('photo')
-									// .sort([[sortBy, 'asc']])
-									// .limit(limit);
-
-        if (products) {
-            res.json(products);
-        }
-
-    } catch (error) {
-		
-		res.status(400).json({
-			error: "No products found"
-		})
-	}
-}
-
-exports.getAllUniqueCategories = async (req, res) => {
-
-	try {
-		
-		const categories = await Product.distinct('category', {});
-
-		if (categories) {
-			res.json(categories);
-		}
-
-	} catch (error) {
-		
-		return res.status(400).json({
-			error: "No Category Found"
-		})
-	}
-}
-
+// @desc Update a Product Stock
+// @route GET /api/offer/all
+// @access Admin
 exports.updateStock = (req, res) => {
 
 	let myOperations = req.body.order.products.map(prod => {

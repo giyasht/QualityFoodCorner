@@ -6,6 +6,45 @@ const crypto = require('crypto');
 const { v4: uuidv4 } = require('uuid');
 uuidv4();
 
+
+var AddressSchema = mongoose.Schema(
+    {
+        mobile: {
+            type: Number,
+            maxlength: 12,
+            trim: true,
+        },
+
+        city: {
+            type: String,
+            trim: true,
+        },
+
+        street: {
+            type: String,
+            trim: true,
+        },
+        
+        houseNumber: {
+            type: String,
+            trim: true,
+        },
+    }
+);
+
+var orderSchema = new mongoose.Schema(
+    {
+        status: {
+            type: String,
+            trim: true,
+            default: 'pending',
+        },
+        
+        default: [],
+    }
+)
+  
+
 var userSchema = new mongoose.Schema(
     {
         name: {
@@ -28,9 +67,9 @@ var userSchema = new mongoose.Schema(
             unique: true,
         },
 
-        userinfo: {
-            type: String,
-            trim: true,
+        address: {
+            type: AddressSchema,
+            // required: true,
         },
 
         encry_password: {
@@ -48,7 +87,19 @@ var userSchema = new mongoose.Schema(
         cartItems: {
             type: Array,
             default: [],
-        }
+        },
+
+        orders: {
+            type: Array,
+            default: {
+                status:"pending",
+                items:[],
+            },
+        },
+
+        // orders: {
+        //     type: orderSchema,
+        // },
     },
     {
         timestamps : true,

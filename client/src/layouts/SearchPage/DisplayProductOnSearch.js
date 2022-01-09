@@ -49,23 +49,28 @@ const DisplayProductOnSearch = () => {
 								}}>Q.F.C</NavLink>
 							</li>
 							<li>
-								<NavLink to="/menu/burger" onClick={ () => {
-								}}>Burger</NavLink>
-							</li>
-							<li>
-								<NavLink to="/menu/pizza" onClick={ () => {
-								}}>Pizza</NavLink>
-							</li>
-							<li>
 								<NavLink to="/menu/south indian" onClick={ () => {
+									setLoading(true)
 								}}>South Indian</NavLink>
 							</li>
 							<li>
-								<NavLink to="/menu/chinese" onClick={ () => {
-								}}>chinese</NavLink>
+								<NavLink to="/menu/indian main course" onClick={ () => {
+									setLoading(true)
+								}}>Indian Main Course</NavLink>
+							</li>
+							<li>
+								<NavLink to="/menu/indian breads" onClick={ () => {
+									setLoading(true)
+								}}>Indian Breads</NavLink>
+							</li>
+							<li>
+								<NavLink to="/menu/desserts" onClick={ () => {
+									setLoading(true)
+								}}>Desserts</NavLink>
 							</li>
 							<li>
 								<NavLink to="/menu/beverages" onClick={ () => {
+									setLoading(true)
 								}}>Beverages</NavLink>
 							</li>
 						</ul>
@@ -77,7 +82,7 @@ const DisplayProductOnSearch = () => {
                                         
                                 : 	((!product.error && product.length !== 0)  	?  	<>
 																						<div style={{marginTop:'auto'}}></div>
-                                                                                        <Product {...product} />
+                                                                                        	<Product {...product} />
 																						<div style={{marginBottom:'auto'}}></div>
                                                                                     </>
                                                                                 : 	( <Error404/> ))

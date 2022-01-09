@@ -1,15 +1,17 @@
 const express = require('express');
 const router = express.Router();
-const { signout, signup, signin, isSignedin } = require('../controllers/auth');
+const { signout, signup, signin } = require('../controllers/auth');
 const { check } = require('express-validator');
 
+// @desc Create a User ( SignUp )
+// @access Public
 router.post(
     '/signup',
 
     // Middlewares to check basic validation of name, lastname, email and password
     [
-        check('name','name must be more than 2 char').isLength({ min: 2 }), 
-        check('lastname','lastname must be more than 2 char').isLength({ min: 2 }), 
+        check('name','Name must be more than 2 char').isLength({ min: 2 }), 
+        check('lastname','Lastname must be more than 2 char').isLength({ min: 2 }), 
         check('email','Invalid Email').isEmail(),
         check(
             'password',
@@ -24,7 +26,8 @@ router.post(
     signup
 );
 
-
+// @desc Signin a User ( Signin )
+// @access Public
 router.post(
     '/signin',
 
@@ -37,10 +40,8 @@ router.post(
     signin
 );
 
+// @desc SignOut a User ( Signout )
+// @access Public
 router.get('/signout', signout);
-
-router.get('/test', isSignedin, (req,res) => {
-    res.send('A protected route')
-})
 
 module.exports = router;

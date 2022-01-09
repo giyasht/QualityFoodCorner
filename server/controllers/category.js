@@ -1,16 +1,22 @@
 const Category = require('../models/category');
 const { validationResult } = require('express-validator');
 
+
+// @desc Get a Category By Id
+// @route GET /api/category/:catergoryId
+// @access Public
 exports.getCategoryById = async (req, res, next, id) => {
 
     try {
 
         const category = await Category.findById(id);
 
-        if(category){
+        if (category) {
             req.category = category;
-        }else{
-            res.status(400).json({
+        }
+        
+        else {
+            return res.status(400).json({
                 error: 'Not found category by ID'
             });
         }
@@ -24,23 +30,27 @@ exports.getCategoryById = async (req, res, next, id) => {
     }
 }
 
+// @desc Get a Category By Name
+// @route GET /api/category/:catergoryName
+// @access Public
 exports.getCategoryByName = async (req, res, next, name) => {
 
     try {
 
         const category = await Category.findOne( { name: name } );
 
-        if(category){
+        if (category) {
             req.category = category;
-        }else{
-            res.status(400).json({
+        }
+        
+        else {
+            return res.status(400).json({
                 error: 'Not found category by name'
             });
         }
 
+        // It will go to next function with category info in req.category
         next();
-
-        // It will go to next function with category in req 
         
     } catch (error) {
         return res.status(400).json({
@@ -49,6 +59,43 @@ exports.getCategoryByName = async (req, res, next, name) => {
     }
 }
 
+// @desc Get All Categories
+// @route GET /api/categories
+// @access Public
+exports.getAllCategory = async (req, res) => {
+
+    try {
+        
+        const categories = await Category.find();
+
+        if (categories) {
+            return res.json(categories);
+        }
+
+    } catch (error) {
+        return res.json({
+            error: "No categories found"
+        })
+    }
+}
+
+// @desc Get a Category
+// @access Public
+exports.getCategory = (req, res) => {
+    
+    try {
+        return res.json(req.category)
+        
+	} catch (error) {
+		return res.json({
+			error: "404 Not Found"
+		})
+	}
+}
+
+// @desc Create a Category
+// @route POST /api/category/create/:userId
+// @access ADMIN
 exports.createCategory = async (req, res) => {
 
     try {
@@ -80,27 +127,9 @@ exports.createCategory = async (req, res) => {
     }
 }
 
-exports.getCategory = (req, res) => {
-    return res.json(req.category)
-}
-
-exports.getAllCategory = async (req, res) => {
-
-    try {
-        
-        const categories = await Category.find();
-
-        if (categories) {
-            res.json(categories);
-        }
-
-    } catch (error) {
-        res.json({
-            error: "No category found"
-        })
-    }
-}
-
+// @desc Update a Category
+// @route PUT /api/category/:catergoryId/:userId
+// @access ADMIN
 exports.updateCategory = async (req, res) => {
 
     try {
@@ -121,12 +150,15 @@ exports.updateCategory = async (req, res) => {
         }
 
     } catch (error) {
-        res.json({
+        return res.json({
             error: "Unable to update"
         })
     }
 }
 
+// @desc Update a Category
+// @route DELETE /api/category/:catergoryId/:userId
+// @access ADMIN
 exports.deleteCategory = async (req, res) => {
 
     try {
@@ -142,7 +174,7 @@ exports.deleteCategory = async (req, res) => {
         }
 
     } catch (error) {
-        res.status(400).json({
+        return res.status(400).json({
             error: `Failed to delete this category`
         })
     }

@@ -11,10 +11,10 @@ const Banner = () => {
 						<div className="row" style={{margin:0}}>
 							<div className="col-lg-6 col-xl-5">
 								<div className="text-container">
-									<h1>Food Panda</h1>
-									<p className="p-large">Since 1974</p>
+									<h1>Quality Food Corner</h1>
+									<p className="p-large">Since 2020</p>
 									<p className="p-large-long ">
-										Let’s eat some diet food while we wait for the steak to
+										Let’s eat some fresh food while we wait for the steak to
 										cook.
 									</p>
 								</div>

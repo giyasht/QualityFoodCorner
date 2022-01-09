@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react'
 import Swal from 'sweetalert2'
 import { isAuthenticated } from '../../../auth';
 import { addCategory } from '../../Helper/Category/index';
-import AdminSideBar from '../../../components/AdminSideBar/AdminSideBar';
+import AdminSideBar from '../../components/AdminSideBar/AdminSideBar';
 
 const AddCategoryDb = () => {
 
@@ -43,16 +43,28 @@ const AddCategoryDb = () => {
     };
 
     const AddCategoryDatabaseForm = () => {
+
+        var rowStyles = {
+            width:"70%", 
+            height:"100vh", 
+            display:"flex",
+            justifyContent:"center",
+            margin:"auto",
+            marginTop:"100px",
+            padding:"100px",
+        }
+        
         return (
-            <div className="row">
-                <div className="col-md-6 offset-sm-3 text-left">
-                    <h1>Create Category</h1>
+            <div className="row" style={rowStyles}>
+                <div>
+                    <h1 style={{color:"white"}}>Create Category</h1>
+                    <br />
                     <form>
                         <div className="form-group">
-                            <label className="form-control-label">Name of Category</label>
-                            <input className="form-control" type="text" onChange={handleChange('name')} value={name} />
+                            <input className="feedback-input" placeholder="Name of Category" type="text" onChange={handleChange('name')} value={name} />
                         </div>
-                        <button onClick={onSubmit} className="btn btn-primary" >Submit</button>
+                        <br />
+                        <button type="submit" onClick={onSubmit}>Submit</button>
                     </form>
                 </div>
             </div>
@@ -79,7 +91,7 @@ const AddCategoryDb = () => {
 
     return (
         <>
-            <div style={{overflow:"hidden"}}>
+            <div style={{overflow:"hidden", display:"flex", backgroundColor:"var(--lightblack)"}}>
                 <AdminSideBar/>
                 {AddCategoryDatabaseForm()}
             </div>

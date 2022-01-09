@@ -10,10 +10,10 @@ const SignUp = () => {
     const navigate = useNavigate();
 
     const [values, setValues] = useState({
-        name: "Pawan",
-        lastname: "Jaiswal",
-        email: "p@gmail.com",
-        password: "Pawan@043",
+        name: "",
+        lastname: "",
+        email: "",
+        password: "",
         error: "",
         success: false
     });
@@ -48,6 +48,7 @@ const SignUp = () => {
     };
 
     useEffect(() => {
+        
         if (error){
             Swal.fire({
                 title: 'Admin!',
@@ -55,6 +56,7 @@ const SignUp = () => {
                 text: error,
             })
         }
+        
         if (success){
             Swal.fire({
                 title: 'Admin!',
@@ -62,6 +64,7 @@ const SignUp = () => {
                 text: 'Account creation succcessful !',
             })
         }
+    
     }, [error, success])
 
     const signUpForm = () => {
@@ -77,7 +80,7 @@ const SignUp = () => {
                     <form className="signup-form">
                         <input type="text" onChange={handleChange('name')} value={name} placeholder="Firstname" />
                         <input type="text" onChange={handleChange('lastname')} value={lastname} placeholder="Lastname" />
-                        <input type="email" onChange={handleChange('email')}  value={email} placeholder="Yashgupta@gmail.com" />
+                        <input type="email" onChange={handleChange('email')}  value={email} placeholder="p@gmail.com" />
                         <input type="password" onChange={handleChange('password')} value={password} placeholder="Password" />
                         <button onClick={onSubmit}>Sign Up</button>
                         <p className="message">

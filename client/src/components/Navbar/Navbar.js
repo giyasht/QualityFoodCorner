@@ -52,6 +52,10 @@ const Navbar = () => {
                     <li>
                         <NavLink to="/menu/all"><i className="fab fa-elementor"></i>Menu</NavLink>
                     </li>
+
+                    <li>
+                        <NavLink to="/stores"><i className="fab fa-elementor"></i>Stores</NavLink>
+                    </li>
                     
                     <li>
                         <NavLink to="/menu/search"><i className="fas fa-search"></i>Search</NavLink>
@@ -70,7 +74,7 @@ const Navbar = () => {
                                            
                                             :
                                                 <li>
-                                                    <NavLink to="/dashboard"><i className="fas fa-user"></i>Dashboard</NavLink>
+                                                    <NavLink to="/add/address"><i className="fas fa-user"></i>Dashboard</NavLink>
                                                 </li> 
                             }
                         </>
