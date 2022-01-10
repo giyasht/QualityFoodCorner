@@ -17,6 +17,8 @@ router.param('categoryName', getCategoryByName);
 // @access Public
 router.get('/product/:productId', getProduct );
 
+// @desc Get Products searched by title
+// @access Public
 router.get('/product/search/:title', getSearchedProducts);
 
 // @desc Get Product By Name
