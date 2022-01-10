@@ -18,9 +18,10 @@ const Checkout = (props) => {
 	const [couponApplied, setCouponApplied] = useState(false);
   	const [dV, setDV] = useState(0);
 	
+	var productPriceTotal = 0;
+	
 	const getItemPrice = async (prodid) => {
 
-		var productPriceTotal = 0;
 
 		try {
 
@@ -55,7 +56,7 @@ const Checkout = (props) => {
 			await getItemPrice(item);
 		});
 	
-	}, [isLoading,cartItems]);
+	}, [isLoading]);
 
 	
 	var offers = {
@@ -106,7 +107,6 @@ const Checkout = (props) => {
 
             if (response) {
                 var data = await response.json()
-				console.log(data);
             }
 
 			if (data.success) {
