@@ -7,7 +7,7 @@ export const addStoreDatabase = async (userId, token, store) => {
 
         console.log(store);
 
-        const response = await axios.post(`${API}/create/store/${userId}`, store, {
+        const response = await axios.post(`${API}/store/${userId}`, store, {
             headers: {
                 Accept: "application/json",
                 Authorization: `Bearer ${token}`,

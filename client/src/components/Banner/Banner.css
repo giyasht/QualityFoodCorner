@@ -1,3 +1,7 @@
+.backgroundColor{
+  background-color: var(--lightblack) !important
+}
+
 .header {
   background-color: var(--lightblack);
 }

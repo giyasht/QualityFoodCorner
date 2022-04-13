@@ -1,22 +1,14 @@
 import React from 'react'
-import { arrayBufferToBase64 } from '../../assets/BufferToBase64'
 import './DeveloperCard.css'
 
 const DeveloperCard = (props) => {
 
-    const { name, email, developerImage, facebook, instagram, linkedin } = props
-
-    var img, binarystring;
-
-    if(developerImage){
-        binarystring = arrayBufferToBase64(developerImage.data.data)
-        img = `data:image/jpeg;base64, ${binarystring}`;
-    }
+    const { name, email, facebook, instagram, linkedin, imgUrl } = props
 
     return (
         <div className="card">
             <div className="content">
-                <div className="imgBx"><img src={img} alt="..."/></div>
+                <div className="imgBx"><img src={imgUrl} alt="..." width="220px" height="220px"/></div>
                 <div className="contentBx">
                     <h3>{name}<br /><span className="subheading">{email}</span></h3>
                 </div>

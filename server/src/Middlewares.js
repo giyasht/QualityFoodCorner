@@ -2,6 +2,7 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const cookieParser = require('cookie-parser');
 const cors = require('cors');
+const helmet = require('helmet')
 
 module.exports = [
 
@@ -23,5 +24,7 @@ module.exports = [
         methods: ['GET', 'POST', 'PUT', 'DELETE'],
         allowedHeaders: ['Content-Type', 'Authorization'],
         credentials: true
-    }),    
+    }),
+
+    helmet(),
 ]

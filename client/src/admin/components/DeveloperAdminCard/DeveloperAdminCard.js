@@ -1,23 +1,15 @@
 import React from 'react'
-import { arrayBufferToBase64 } from '../../../assets/BufferToBase64'
 import './DeveloperAdminCard.css'
 
 const DeveloperAdminCard = (props) => {
 
-    const { _id, name, email, facebook, instagram, linkedin, developerImage } = props
-
-    var img, binarystring;
-	
-	if(developerImage){
-		binarystring = arrayBufferToBase64(developerImage.data.data)
-		img = `data:image/jpeg;base64, ${binarystring}`;
-	}
+    const { _id, name, email, facebook, instagram, linkedin, imgUrl } = props
 
     return (
         <div className="row1-container">
             <div className="boxDeveloper">
                 <div className='devImgBox'>
-                    <img src={img} alt="" />
+                    <img src={imgUrl} alt="" width="220px" height="220px" />
                 </div>
                 <h4>{name}</h4>
                 <p>(id:{_id})</p>

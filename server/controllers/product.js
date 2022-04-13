@@ -1,49 +1,54 @@
+const mongoose =  require('mongoose')
 const Product = require("../models/product");
 const Category = require("../models/category");
 const formidable = require("formidable");
 const _ = require("lodash");
 const fs = require("fs");
-const { sortBy } = require("lodash");
-const path = require("path");
-const { validationResult } = require("express-validator");
 
+// @desc Get Product By ID
+// @route GET /api/product/:productId
+// @access Public
 exports.getSearchedProducts = async (req, res) => {
-  const title = req.params.title;
-  const searchedProds = await Product.find({
-    name: { $regex: new RegExp(title) },
-  });
-//   console.log(searchedProds.length);
-  if (searchedProds.length>0) {
-    return res.json(searchedProds);
-  } else {
-    return res.json({
-      error: "No searched products found",
+
+    const title = req.params.title;
+    
+    const searchedProds = await Product.find({
+      	name: { $regex: new RegExp(title) },
     });
-  }
+
+	//   console.log(searchedProds.length);
+	if (searchedProds.length>0) {
+		return res.json(searchedProds);
+	} 
+	else {
+		return res.json({
+			error: "No searched products found",
+		});
+	}
 };
 
 // @desc Get Product By ID
 // @route GET /api/product/:productId
 // @access Public
 exports.getProductById = async (req, res, next, id) => {
-  try {
-    const product = await (await Product.findById(id)).populate("category");
+	try {
+		const product = await (await Product.findById(id)).populate("category");
 
-    if (product) {
-      req.product = product;
-    } else {
-      return res.status(400).json({
-        error: "Not found product by ID",
-      });
-    }
+		if (product) {
+			req.product = product;
+		} else {
+		return res.status(400).json({
+			error: "Not found product by ID",
+		});
+		}
 
-    // It will go to next function with product info in req.product
-    next();
-  } catch (error) {
-    return res.status(400).json({
-      error: "Product not found",
-    });
-  }
+		// It will go to next function with product info in req.product
+		next();
+	} catch (error) {
+		return res.status(400).json({
+		error: "Product not found",
+		});
+	}
 };
 
 // @desc Get Product By Name
@@ -74,37 +79,66 @@ exports.getProductByName = async (req, res, next, name) => {
 // @route GET /api/products
 // @access Public
 exports.getAllProducts = async (req, res) => {
-  try {
-    let limit = req.query.limit ? parseInt(req.query.limit) : 100;
-    let sortBy = req.query.sortBy ? req.query.sortBy : "_id";
+	
+	try {
+		let limit = req.query.limit ? parseInt(req.query.limit) : 100;
+		let sortBy = req.query.sortBy ? req.query.sortBy : "_id";
 
-    const products = await Product.find()
-      .populate("category")
-      .select("-photo")
-      .sort([[sortBy, "asc"]])
-      .limit(limit);
+		const products = await Product.find()
+										.populate("category")
+										.select("-photo")
+										.sort([[sortBy, "asc"]])
+										.limit(limit);
 
-    if (products) {
-      return res.json(products);
-    }
-  } catch (error) {
-    return res.status(400).json({
-      error: "No products found",
-    });
-  }
+		if (products) {
+			return res.json({ 
+				products: products
+			});
+		}
+	} catch (error) {
+		return res.status(400).json({
+			error: "No products found",
+		});
+	}
 };
 
 // @desc Get a Product
 // @access Public
-exports.getProduct = (req, res) => {
-  try {
-    // req.product.photo = undefined
-    return res.json(req.product);
-  } catch (error) {
-    return res.json({
-      error: "404 Not Found",
-    });
-  }
+exports.getProduct = async(req, res) => {
+    
+	try {
+        
+		const param = req.params.product;
+
+		var product = await Product.findOne({ name: param });
+
+		if (product) {
+            return res.status(200).json(product);
+        }
+
+        if (product === null && mongoose.isValidObjectId(param)) {
+            
+			product = await Product.findOne({ _id: param });
+
+            if (product) {
+                return res.json(product);
+            }
+
+            return res.json({
+                error: "404 Not Found",
+            });
+        }
+
+        return res.json({
+            error: "404 Not Found",
+        });
+    } catch (error) {
+        console.log(error);
+
+        return res.json({
+            error: "Server Error",
+        });
+    }
 };
 
 // @desc Get Products By Category
@@ -154,201 +188,158 @@ exports.getAllUniqueCategories = async (req, res) => {
 // @route POST /api/offer/all
 // @access Admin
 exports.createProduct = async (req, res) => {
-  try {
-    let form = new formidable.IncomingForm();
-    form.keepExtensions = true;
+	try {
+		let form = new formidable.IncomingForm();
+		form.keepExtensions = true;
 
-    form.parse(req, async (err, fields, file) => {
-      // console.log(err,fields,file);
+		form.parse(req, async (err, fields, file) => {
+		// console.log(err,fields,file);
 
-      if (err) {
-        return res.status(400).json({
-          error: "Problem with image",
-        });
-      }
+		if (err) {
+			return res.status(400).json({
+			error: "Problem with image",
+			});
+		}
 
-      const { name, description, price, category, stock, photoUrl } = fields;
+		const { name, description, price, category, stock, photoUrl } = fields;
 
-      if (!name) {
-        return res.status(400).json({
-          error: "Name field is empty !",
-        });
-      }
+		if (!name) {
+			return res.status(400).json({
+			error: "Name field is empty !",
+			});
+		}
 
-      if (!description) {
-        return res.status(400).json({
-          error: "Description field is empty !",
-        });
-      }
+		if (!description) {
+			return res.status(400).json({
+			error: "Description field is empty !",
+			});
+		}
 
-      if (!price) {
-        return res.status(400).json({
-          error: "Price field is empty !",
-        });
-      }
+		if (!price) {
+			return res.status(400).json({
+			error: "Price field is empty !",
+			});
+		}
 
-      if (!category) {
-        return res.status(400).json({
-          error: "Category field is empty !",
-        });
-      }
+		if (!category) {
+			return res.status(400).json({
+			error: "Category field is empty !",
+			});
+		}
 
-      if (!stock) {
-        return res.status(400).json({
-          error: "Stock field is empty !",
-        });
-      }
+		if (!stock) {
+			return res.status(400).json({
+			error: "Stock field is empty !",
+			});
+		}
 
-      const categoryObject = await Category.findOne({ name: fields.category });
+		const categoryObject = await Category.findOne({ name: fields.category });
 
-      if (!categoryObject) {
-        return res.status(400).json({
-          error: `${fields.category} Catgeory does not exists !`,
-        });
-      }
+		if (!categoryObject) {
+			return res.status(400).json({
+			error: `${fields.category} Catgeory does not exists !`,
+			});
+		}
 
-      const updatedFields = {
-        name: fields.name,
-        description: fields.description,
-        price: fields.price,
-        category: categoryObject._id,
-        stock: fields.stock,
-        photoUrl: fields.photoUrl,
-      };
+		const updatedFields = {
+			name: fields.name,
+			description: fields.description,
+			price: fields.price,
+			category: categoryObject._id,
+			stock: fields.stock,
+			photoUrl: fields.photoUrl,
+		};
 
-      let product = new Product(updatedFields);
+		let product = new Product(updatedFields);
 
-      // handle file
-      if (file.photo) {
-        if (file.photo.size > 3000000) {
-          return res.status(400).json({
-            error: "File size too big",
-          });
-        }
+		// handle file
+		if (file.photo) {
+			if (file.photo.size > 3000000) {
+			return res.status(400).json({
+				error: "File size too big",
+			});
+			}
 
-        // formidable - V1
-        // product.photo.data = fs.readFileSync(file.photo.path);
-        // product.photo.contentType = file.photo.type;
+			// formidable - V1
+			// product.photo.data = fs.readFileSync(file.photo.path);
+			// product.photo.contentType = file.photo.type;
 
-        // formidable - V2
-        product.photo.data = fs.readFileSync(file.photo.filepath);
-        product.photo.contentType = file.photo.mimetype;
-      }
+			// formidable - V2
+			product.photo.data = fs.readFileSync(file.photo.filepath);
+			product.photo.contentType = file.photo.mimetype;
+		}
 
-      // save to DB
-      const productCreated = await product.save();
+		// save to DB
+		const productCreated = await product.save();
 
-      if (productCreated) {
-        res.json(productCreated);
-      }
-    });
-  } catch (error) {
-    res.status(400).json({
-      error: "Saving Failed",
-    });
-  }
+		if (productCreated) {
+			res.json(productCreated);
+		}
+		});
+	} catch (error) {
+			res.status(400).json({
+			error: "Saving Failed",
+		});
+	}
 };
 
 // @desc Update a Product
-// @route PUT /api/offer/all
-// @access Admin
+// @route PUT /api/product/:productId/:userId
+// @access ADMIN
 exports.updateProduct = async (req, res) => {
-  try {
-    let form = new formidable.IncomingForm();
-    form.keepExtensions = true;
 
-    form.parse(req, async (err, fields, file) => {
-      if (err) {
-        return res.status(400).json({
-          error: "Problem with image",
-        });
-      }
+    try {
 
-      // Update product
-      let product = req.product;
-      product = _.extend(product, fields);
+        const _id = req.params.productId
 
-      // handle file
-      if (file.photo) {
-        if (file.photo.size > 3000000) {
-          return res.status(400).json({
-            error: "File size too big",
-          });
-        }
-
-        product.photo.data = fs.readFileSync(file.photo.path);
-        product.photo.contentType = file.photo.type;
-      }
-
-      // Save to DB
-      try {
-        const productUpdated = await product.save();
+        const productUpdated = await Product.findByIdAndUpdate(
+            {_id: _id},
+            {$set: req.body},
+            {new:true, useFindAndModify:false},
+        );
 
         if (productUpdated) {
-          return res.json(productUpdated);
+            return res.status(200).json({
+                message: "Product Updated Successfully ...",
+                product: productUpdated
+            })
         }
-      } catch (error) {
-        return res.status(400).json({
-          error: "Updation Failed",
-        });
-      }
-    });
-  } catch (error) {
-    return res.status(400).json({
-      error: "Saving Failed",
-    });
-  }
-};
+
+        else {
+            return res.status(500).json({error: "No product found by given Id"});
+        }
+
+    } catch (error) {
+        console.log(error.message);
+        return res.json({
+            error: "Unable to update the product"
+        })
+    }
+}
 
 // @desc Delete a Product
 // @route DELETE /api/offer/all
 // @access Admin
 exports.deleteProduct = async (req, res) => {
-  try {
-    const product = req.product;
-    const deletedProduct = await product.remove();
+    
+	try {
 
-    if (deletedProduct) {
-      return res.json({
-        message: `Successfully Deleted ${deletedProduct.name} Product`,
-      });
+		const _id = req.params.productId;
+
+		const product = await Product.findById(_id)
+
+		const deletedProduct = await product.remove();
+
+		if (deletedProduct) {
+			return res.status(204).json({
+				message: `Successfully Deleted ${deletedProduct.name} Product`,
+			});
+		}
+
+    } catch (error) {
+      
+		return res.status(400).json({
+			error: `Failed to delete this product`,
+		});
     }
-  } catch (error) {
-    return res.status(400).json({
-      error: `Failed to delete this product`,
-    });
-  }
-};
-
-// @desc
-// @route
-// @access Public
-exports.photo = (req, res, next) => {
-  if (req.product.photo.data) {
-    res.set("Content-Type", req.product.photo.contentType);
-    return res.send(req.product.photo.data);
-  }
-  next();
-};
-// @desc Update a Product Stock
-// @route GET /api/offer/all
-// @access Admin
-exports.updateStock = (req, res) => {
-  let myOperations = req.body.order.products.map((prod) => {
-    return {
-      updateOne: {
-        filter: { _id: prod._id },
-        update: { $inc: { stock: -prod.count, sold: +prod.count } },
-      },
-    };
-  });
-
-  Product.bulkWrite(myOperations, {}, (err, products) => {
-    if (err) {
-      return res.status(400).json({
-        error: "Bulk Operation Failed",
-      });
-    }
-    next();
-  });
 };
