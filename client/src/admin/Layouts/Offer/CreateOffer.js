@@ -31,7 +31,7 @@ const CreateOffer = () => {
     };
 
     const handleNewImage = name => event => {
-        console.log(event.target.files[0]);
+        // console.log(event.target.files[0]);
         setValues({ ...values, [name]: event.target.files[0] });
     }
 

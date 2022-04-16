@@ -52,12 +52,7 @@ const HomepageMenu = () => {
 							<NavLink to={`/menu/${menu.url}`} className="custom-card">
 								<div className="mycard h-100">
 									<div className="inner">
-										<img
-										src={menu.img}
-										className="card-img-top"
-										style={{ height: "170px" }}
-										alt="{menu.name}"
-										/>
+										<img src={menu.img} className="card-img-top" style={{ height: "170px" }} alt="{menu.name}" />
 									</div>
 									<div className="card-body text-center">
 										<h5 className="card-title">{menu.name}</h5>

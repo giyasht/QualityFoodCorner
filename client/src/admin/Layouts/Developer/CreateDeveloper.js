@@ -12,8 +12,8 @@ const CreateDeveloper = () => {
     const navigate = useNavigate()
 
     const [values, setValues] = useState({
-        name: "vedant",
-        email: "dobhle",
+        name: "",
+        email: "",
         facebook: "",
         instagram: "",
         linkedin: "",
@@ -77,7 +77,7 @@ const CreateDeveloper = () => {
             Swal.fire({
                 title: 'Offer !',
                 icon: 'success',
-                text: 'New Offer Created successfully...',
+                text: 'New Team Member Added successfully...',
             })
         }
 
@@ -94,7 +94,7 @@ const CreateDeveloper = () => {
             display:"flex",
             justifyContent:"center",
             margin:"auto",
-            marginTop:"20px",
+            marginTop:"0px",
             marginBottom:"50px",
             padding:"100px",
         }
@@ -102,7 +102,7 @@ const CreateDeveloper = () => {
         return (
             <div className="row" style={rowStyles}>
                 <div>
-                    <h1 style={{color:"white"}}>Add New Developer</h1>
+                    <h1 style={{color:"white", textAlign:"center"}}>Add New Member</h1>
                     <br />
                     <form>
                         <div className="form-group">

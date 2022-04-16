@@ -1,43 +1,44 @@
-import React, { useState, useEffect } from 'react'
+import React, { useEffect } from 'react'
 import DeveloperAdminCard from '../../components/DeveloperAdminCard/DeveloperAdminCard'
 import AdminSideBar from '../../components/AdminSideBar/AdminSideBar'
 import Loading from '../../../components/Loading/Loading'
+import axios from "axios";
+import { useDispatch, useSelector } from "react-redux";
+import { setDevelopers } from "./../../../service/actions/actions";
 const API = process.env.REACT_APP_BACKEND_API
 
 const ListAllDeveloper = () => {
 
-    const [developers, setDevelopers] = useState([]);
-    const [length, setLength] = useState(0);
-	const [isBusy, setBusy] = useState(true)
+    const dispatch = useDispatch();
+
+    const isLoading = useSelector((state) => state.developers.isLoading)
+    const developers = useSelector((state) => state.developers.developers);
+
+    const getAllDeveloper = async () => {
+
+        try {
+
+            const response = await axios.get(`${API}/developers`, {
+                headers: {
+                    Accept: "application/json",
+                    "Content-Type": "application/json",
+                },
+            })
+    
+            if (response.data) {
+                dispatch(setDevelopers(response.data.developers));
+            }
+
+        } catch (error) {
+            return console.log(error);
+        }
+    }
 
     useEffect(() => {
 
-		const getAllStores = async () => {
+		getAllDeveloper()
 
-			try {
-
-                const response = await fetch(`${API}/developer/all`, {
-                    method: "GET",
-                    headers: {
-                        Accept: "application/json",
-                    },
-                })
-        
-                if (response) {
-                    var data = await response.json();
-                    setDevelopers(data);
-                    setLength(data.length)
-                    setBusy(false);
-                }
-
-			} catch (error) {
-				return console.log(error);
-			}
-		}
-
-		getAllStores()
-
-	}, [])
+	})
 
     function showDevelopers(start,end){
         
@@ -58,7 +59,8 @@ const ListAllDeveloper = () => {
                     <section>
                         <div className="container">
                             {
-                                isBusy ? <Loading/> : showDevelopers(0,length)
+                                isLoading ? <Loading/> : 
+                                showDevelopers(0, developers.length)
                             }
                         </div>
                     </section>

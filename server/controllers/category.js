@@ -1,96 +1,104 @@
+const mongoose = require('mongoose');
+const { ObjectId } = require('mongodb');
 const Category = require('../models/category');
 const { validationResult } = require('express-validator');
 
-
-// @desc Get a Category By Id
-// @route GET /api/category/:catergoryId
-// @access Public
-exports.getCategoryById = async (req, res, next, id) => {
-
-    try {
-
-        const category = await Category.findById(id);
-
-        if (category) {
-            req.category = category;
-        }
-        
-        else {
-            return res.status(400).json({
-                error: 'Not found category by ID'
-            });
-        }
-        
-        next();
-
-    } catch (error) {
-        return res.status(400).json({
-            error: 'Error in finding category by ID'
-        });
-    }
-}
-
 // @desc Get a Category By Name
-// @route GET /api/category/:catergoryName
+// @route GET /api/category/:catergory
 // @access Public
 exports.getCategoryByName = async (req, res, next, name) => {
-
-    try {
-
-        const category = await Category.findOne( { name: name } );
-
-        if (category) {
-            req.category = category;
-        }
-        
-        else {
-            return res.status(400).json({
-                error: 'Not found category by name'
-            });
-        }
-
-        // It will go to next function with category info in req.category
-        next();
-        
-    } catch (error) {
-        return res.status(400).json({
-            error: 'Error in finding category'
-        });
-    }
-}
-
-// @desc Get All Categories
-// @route GET /api/categories
-// @access Public
-exports.getAllCategory = async (req, res) => {
-
-    try {
-        
-        const categories = await Category.find();
-
-        if (categories) {
-            return res.json(categories);
-        }
-
-    } catch (error) {
-        return res.json({
-            error: "No categories found"
-        })
-    }
-}
-
-// @desc Get a Category
-// @access Public
-exports.getCategory = (req, res) => {
     
     try {
-        return res.json(req.category)
         
-	} catch (error) {
-		return res.json({
-			error: "404 Not Found"
-		})
-	}
+        const category = await Category.findOne({ name: name });
+        
+        if (category) {
+            req.category = category;
+        } else {
+            return res.status(400).json({
+                error: "Not found category by name",
+            });
+        }
+        // It will go to next function with category info in req.category
+        next();
+
+    } catch (error) {
+        return res.status(400).json({
+            error: "Error in finding category",
+        });
+    }
+};
+
+// @desc Get a Category By Name
+// @param GET /:catergoryId
+// @access Public
+exports.getCategoryById = async (req, res, next, id) => {
+    
+    try {
+
+        const category = await Category.findOne({ _id:  ObjectId(id) });
+        // const category = await Category.findById(id);
+
+        // console.log(category);
+        
+        if (category) {
+            req.category = category;
+        } else {
+            return res.status(400).json({
+                error: "Not found category by Id",
+            });
+        }
+        // It will go to next function with category info in req.category
+        next();
+
+    } catch (error) {
+        console.log(error);
+        return res.status(400).json({
+            error: "Error in finding category",
+        });
+    }
+};
+
+// @desc Get a Category
+// @route GET /api/category/:category
+// @access Public
+exports.getCategory = async (req, res) => {
+    
+    try{
+        
+        const param = req.params.category;
+        
+        var category = await Category.findOne({ name: param });
+
+        if (category) {
+            return res.json(category); 
+        }
+
+        if(category === null && mongoose.isValidObjectId(param)){
+
+            category = await Category.findOne({ _id: param }); 
+            
+            if(category){
+                return res.json(category);
+            } 
+            
+            return res.json({
+                error: "404 Not Found"
+            })
+        }
+
+        return res.json({
+            error: "404 Not Found"
+        })
+
+    }catch(error){
+        
+        console.log(error);
+        
+        return res.json({
+            error: "Server Error"
+        })
+    }
 }
 
 // @desc Create a Category
@@ -135,18 +143,28 @@ exports.updateCategory = async (req, res) => {
     try {
 
         const errors = validationResult(req);
+        
         if (!errors.isEmpty()) {
             return res.status(400).json({ error: errors.array()[0].msg ,message:"validation error" });
         }
-        
-        const category = req.category;
 
-        category.name = req.body.name;
+        const _id = req.category.id
 
-        const updatedCategory = await category.save();
+        const categoryUpdated = await Category.findByIdAndUpdate(
+            {_id: _id},
+            {$set: req.body},
+            {new:true, useFindAndModify:false},
+        );
 
-        if (updatedCategory) {
-            return res.json(updatedCategory)
+        if (categoryUpdated) {
+            return res.status(200).json({
+                message: "Category Updated Successfully ...",
+                category: categoryUpdated
+            })
+        }
+
+        else {
+            return res.status(500).json({error: "Failed to Register"});
         }
 
     } catch (error) {
@@ -162,8 +180,8 @@ exports.updateCategory = async (req, res) => {
 exports.deleteCategory = async (req, res) => {
 
     try {
-        
-        const category = req.category;
+
+        const category = req.category
  
         const deletedCategory = await category.remove();
 
@@ -174,8 +192,33 @@ exports.deleteCategory = async (req, res) => {
         }
 
     } catch (error) {
+        
+        console.log(error);
+        
         return res.status(400).json({
-            error: `Failed to delete this category`
+            error: 'Failed to delete this category'
+        })
+    }
+}
+
+// @desc Get All Categories
+// @route GET /api/categories
+// @access Public
+exports.getAllCategory = async (req, res) => {
+
+    try {
+        
+        const categories = await Category.find();
+
+        if (categories) {
+            return res.json({
+                categories: categories
+            });
+        }
+
+    } catch (error) {
+        return res.json({
+            error: "No categories found"
         })
     }
 }

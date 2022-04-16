@@ -59,6 +59,10 @@ var userSchema = new mongoose.Schema(
             maxlength: 32,
             trim: true,
         },
+        
+        profileImgUrl:{
+            type:String,
+        },
 
         email: {
             type: String,

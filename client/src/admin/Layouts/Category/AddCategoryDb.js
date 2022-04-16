@@ -28,14 +28,23 @@ const AddCategoryDb = () => {
 
             setValues({ ...values, error: false });
 
-            const data = await addCategory( user._id, token, { name });
-
-            if (data.error) {
-                setValues({ ...values, error: data.error, success:false })
-            }else{
-                setValues({ ...values, name:'', error:'', success:true });
+            if (name === '') {
+                Swal.fire({
+                    title: 'Admin!',
+                    icon: 'error',
+                    text: 'Name of Category is required',
+                })
             }
 
+            else {
+                const data = await addCategory( user._id, token, { name });
+
+                if (data.error) {
+                    setValues({ ...values, error: data.error, success:false })
+                }else{
+                    setValues({ ...values, name:'', error:'', success:true });
+                }
+            }
                 
         } catch (error) {
             console.log("Error in creating category...");

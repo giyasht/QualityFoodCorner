@@ -1,43 +1,44 @@
-import React, { useState, useEffect } from 'react'
+import React, { useEffect } from 'react'
 import CategoryCard from './../../components/CategoryAdminCard/CategoryAdminCard'
 import AdminSideBar from '../../components/AdminSideBar/AdminSideBar'
 import Loading from './../../../components/Loading/Loading'
+import axios from "axios";
+import { useDispatch, useSelector } from "react-redux";
+import { setCategories } from "./../../../service/actions/actions";
 const API = process.env.REACT_APP_BACKEND_API
 
 const ListAllCategories = () => {
 
-    const [categories, setCategories] = useState([]);
-    const [length, setLength] = useState(0);
-	const [isBusy, setBusy] = useState(true)
+    const dispatch = useDispatch();
+
+    const isLoading = useSelector((state) => state.categories.isLoading)
+    const categories = useSelector((state) => state.categories.categories);
+
+    const getAllCategories = async () => {
+
+        try {
+
+            const response = await axios.get(`${API}/categories`, {
+                headers: {
+                    Accept: "application/json",
+                    "Content-Type": "application/json",
+                },
+            })
+    
+            if (response.data) {
+                dispatch(setCategories(response.data.categories));
+            }
+
+        } catch (error) {
+            return console.log(error);
+        }
+    }
 
     useEffect(() => {
 
-		const getAllCategories = async () => {
-
-			try {
-
-                const response = await fetch(`${API}/categories`, {
-                    method: "GET",
-                    headers: {
-                        Accept: "application/json",
-                    },
-                })
-        
-                if (response) {
-                    var data = await response.json();
-                    setCategories(data);
-                    setLength(data.length)
-                    setBusy(false);
-                }
-
-			} catch (error) {
-				return console.log(error);
-			}
-		}
-
 		getAllCategories()
 
-	}, [])
+	})
 
     function showCategories(start,end){
         
@@ -58,7 +59,8 @@ const ListAllCategories = () => {
                     <section>
                         <div className="container">
                             {
-                                isBusy ? <Loading/> : showCategories(0,length)
+                                isLoading ? <Loading/> : 
+                                showCategories(0, categories.length)
                             }
                         </div>
                     </section>

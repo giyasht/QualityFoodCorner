@@ -123,9 +123,7 @@ const Cartitem = (props) => {
 						</article>
 					</div>
 			}	
-		</>
-			
-			
+		</>			
 	);
 };
 

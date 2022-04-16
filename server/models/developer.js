@@ -16,11 +16,6 @@ var developerSchema = new mongoose.Schema(
             maxlength: 100,
         },
 
-        developerImage: {
-            data: Buffer,
-            contentType: String,
-        },
-
         facebook: {
             type: String,
             trim: true,
@@ -37,10 +32,15 @@ var developerSchema = new mongoose.Schema(
             type: String,
             trim: true,
             maxlength: 200,
+        },
+
+        imgUrl: {
+            type: String,
+            trim: true,
+            maxlength: 1000,
         }
 
     },
-    
     {
         timestamps: true,
     },

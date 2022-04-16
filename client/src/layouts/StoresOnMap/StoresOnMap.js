@@ -10,8 +10,6 @@ mapboxgl.accessToken = 'pk.eyJ1IjoicGF3YW4wODQzIiwiYSI6ImNreGVidnc3czBtaGsyeG40a
 
 const StoresOnMap = () => {
 
-    
-
     useEffect(() => {
 
         const map = new mapboxgl.Map({
@@ -26,9 +24,9 @@ const StoresOnMap = () => {
             const res = await fetch(`${API}/stores`);
 
             const data = await res.json();
-
-            if (data.data) {
-                const stores = data.data.map(store => {
+            
+            if (data.stores) {
+                const stores = data.stores.map(store => {
                     return {
                       type: 'Feature',
                       geometry: {

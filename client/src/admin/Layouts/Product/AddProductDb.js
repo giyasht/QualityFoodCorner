@@ -22,7 +22,7 @@ const AddProductDb = () => {
         error: "",
         success: false
     });
-    // photo,
+
     const {name, description, price, category, stock, photoUrl, error, success} = values;
 
     const { user, token } = isAuthenticated();
