@@ -1,43 +1,44 @@
-import React, { useState, useEffect } from 'react'
+import React, { useEffect } from 'react'
 import StoreAdminCard from '../../components/StoreAdminCard/StoreAdminCard'
 import AdminSideBar from '../../components/AdminSideBar/AdminSideBar'
 import Loading from '../../../components/Loading/Loading'
+import axios from "axios";
+import { useDispatch, useSelector } from "react-redux";
+import { setStores } from "./../../../service/actions/actions";
 const API = process.env.REACT_APP_BACKEND_API
 
 const ListAllStore = () => {
 
-    const [stores, setStores] = useState([]);
-    const [length, setLength] = useState(0);
-	const [isBusy, setBusy] = useState(true)
+    const dispatch = useDispatch();
+
+    const isLoading = useSelector((state) => state.stores.isLoading)
+    const stores = useSelector((state) => state.stores.stores);
+
+    const getAllStores = async () => {
+
+        try {
+
+            const response = await axios.get(`${API}/stores`, {
+                headers: {
+                    Accept: "application/json",
+					"Content-Type": "application/json",
+                },
+            })
+
+            if (response.data) {
+                dispatch(setStores(response.data.stores));
+            }
+
+        } catch (error) {
+            return console.log(error);
+        }
+    }
 
     useEffect(() => {
 
-		const getAllStores = async () => {
-
-			try {
-
-                const response = await fetch(`${API}/stores`, {
-                    method: "GET",
-                    headers: {
-                        Accept: "application/json",
-                    },
-                })
-        
-                if (response) {
-                    var data = await response.json();
-                    setStores(data.data);
-                    setLength(data.data.length)
-                    setBusy(false);
-                }
-
-			} catch (error) {
-				return console.log(error);
-			}
-		}
-
 		getAllStores()
 
-	}, [])
+	})
 
     function showStores(start,end){
         
@@ -58,7 +59,8 @@ const ListAllStore = () => {
                     <section>
                         <div className="container">
                             {
-                                isBusy ? <Loading/> : showStores(0,length)
+                                isLoading ? <Loading/> :  
+                                showStores(0, stores.length)
                             }
                         </div>
                     </section>

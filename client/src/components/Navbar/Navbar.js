@@ -3,7 +3,7 @@ import './Navbar.css';
 import { NavLink } from 'react-router-dom';
 import { signout, isAuthenticated } from './../../auth/index'
 import { useNavigate  } from 'react-router-dom';
-
+// const API = process.env.REACT_APP_BACKEND_API
 
 const Navbar = () => {
 
@@ -12,16 +12,21 @@ const Navbar = () => {
     const [role , setRole] = useState('')
 
     useEffect(() => {
+
         const userDetails = async () => {
 
             try {
+
                 const { user } = isAuthenticated()
+
+                // console.log(user);
 
                 if(user){
                    return setRole(user.role)
                 }
                 
                 return
+                
             } catch (error) {
 				return console.log(error);
             }
@@ -29,11 +34,12 @@ const Navbar = () => {
         }
 
         userDetails()
+
     }, [])
 
     const navSlide = () => {
+        
         const navbarLinks = document.getElementsByClassName('navbar-links')[0]
-
         navbarLinks.classList.toggle('active')
     } 
 
@@ -42,7 +48,7 @@ const Navbar = () => {
             <NavLink to="/" style={{textDecoration: 'none'}} className="custom-card">
                 <div className="brand-title" data-aos="fade-right" data-aos-duration="1200">QFC</div>
             </NavLink>
-            <NavLink to="/#" className="toggle-button" onClick={navSlide}>
+            <NavLink to={false} className="toggle-button" onClick={navSlide}>
                 <span className="bar"></span>
                 <span className="bar"></span>
                 <span className="bar"></span>
@@ -73,9 +79,7 @@ const Navbar = () => {
                                                 </li>
                                            
                                             :
-                                                <li>
-                                                    <NavLink to="/add/address"><i className="fas fa-user"></i>Dashboard</NavLink>
-                                                </li> 
+                                                null
                             }
                         </>
                     )}
@@ -93,16 +97,25 @@ const Navbar = () => {
                     )}
                     
                     { isAuthenticated() && (
-                        <li>
-                            <span   to="/signout"
-                                    onClick={() => {
-                                        signout(() => {
-                                            navigate("/");
-                                        })
-                                    }}
-                            ><i className="fas fa-sign-out-alt"></i>Signout</span>
-                        </li>
+                        <>
+                            <li>
+                                <NavLink to="/profile">
+                                <i className="fas fa-user"></i>Profile
+                                </NavLink>
+                            </li>
+                            <li>
+                                <span   to="/signout"
+                                        onClick={() => {
+                                            signout(() => {
+                                                navigate("/");
+                                            })
+                                        }}
+                                ><i className="fas fa-sign-out-alt"></i>Signout</span>
+                            </li>
+                            
+                        </>
                     )}
+
                     
                 </ul>
             </div>

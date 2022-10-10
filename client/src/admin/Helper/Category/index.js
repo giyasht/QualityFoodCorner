@@ -1,9 +1,11 @@
+import axios from "axios"
 const API = process.env.REACT_APP_BACKEND_API
 
 export const addCategory = async (userId, token, category) => {
+    
     try {
 
-        const response = await fetch(`${API}/category/create/${userId}`, {
+        const response = await fetch(`${API}/category/${userId}`, {
             method: "POST",
             headers: {
                 Accept: "application/json",
@@ -48,12 +50,11 @@ export const updateCategory = async (userId, token, categoryId, updatedCategory)
     }
 }
 
-export const deleteCategory = async (userId, token, categoryId) => {
+export const deleteCategory = async (userId, token, category) => {
 
     try {
 
-        const response = await fetch(`${API}/category/${categoryId}/${userId}`, {
-            method: "DELETE",
+        const response = await axios.delete(`${API}/category/${category.id}/${userId}`, {
             headers: {
                 Accept: "application/json",
                 "Content-Type": "application/json",
@@ -62,7 +63,7 @@ export const deleteCategory = async (userId, token, categoryId) => {
         })
 
         if (response) {
-            return response.json()
+            return response
         }
         
     } catch (error) {
@@ -72,6 +73,7 @@ export const deleteCategory = async (userId, token, categoryId) => {
 }
 
 export const getAllCategories = async () => {
+    
     try {
 
         const response = await fetch(`${API}/categories`, {
@@ -94,7 +96,7 @@ export const getAllCategories = async () => {
 export const getCategoryByName = async (name) => {
     try {
 
-        const response = await fetch(`${API}/category/name/${name}`, {
+        const response = await fetch(`${API}/category/${name}`, {
             method: "GET",
             headers: {
                 Accept: "application/json",

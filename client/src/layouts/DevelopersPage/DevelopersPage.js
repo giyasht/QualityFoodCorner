@@ -1,15 +1,18 @@
-import React, { useState, useEffect } from 'react'
+import React, { useEffect } from 'react'
 import Navbar from '../../components/Navbar/Navbar'
 import DeveloperCard from './../../components/DeveloperCard/DeveloperCard'
 import Loading from '../../components/Loading/Loading'
+import axios from "axios";
+import { useDispatch, useSelector } from "react-redux";
+import { setDevelopers } from "./../../service/actions/actions";
 const API = process.env.REACT_APP_BACKEND_API
 
 const Developers = () => {
 
-    const [developers, setDevelopers] = useState([]);
-    const [length, setLength] = useState(0);
+    const dispatch = useDispatch();
 
-	const [isBusy, setBusy] = useState(true)
+    const isLoading = useSelector((state) => state.developers.isLoading)
+    const developers = useSelector((state) => state.developers.developers);
 
 	useEffect(() => {
 
@@ -17,19 +20,14 @@ const Developers = () => {
 
 			try {
 
-                const response = await fetch(`${API}/developer/all`, {
-                    method: "GET",
+                const response = await axios.get(`${API}/developers`, {
                     headers: {
                         Accept: "application/json",
                     },
                 })
         
-                if (response) {
-                    var data = await response.json();
-                    setDevelopers(data);
-                    // console.log(data);
-                    setLength(data.length)
-                    setBusy(false);
+                if (response.data) {
+                    dispatch(setDevelopers(response.data.developers));
                 }
 
 			} catch (error) {
@@ -39,7 +37,7 @@ const Developers = () => {
 
 		getAllDevelopers()
 
-	}, [])
+	})
 
     function showDevelopers(start,end){
         
@@ -52,8 +50,6 @@ const Developers = () => {
         return elements;
     }
 
-    
-	
     return (
         <>
             <Navbar/>
@@ -61,22 +57,19 @@ const Developers = () => {
             <div className="bada">
 
                 {
-                    isBusy  ?   <Loading/>
-                            :   <section>
-                                    <div className="container">
-                                        {
-                                            showDevelopers(0,length/2)
-                                        }
-                                    </div>
-                                    <div className="container">
-                                        {
-                                            showDevelopers(length/2,length)
-                                        }
-                                        {/* <DeveloperCard {...developers[3]}/>
-                                        <DeveloperCard {...developers[4]}/>
-                                        <DeveloperCard {...developers[5]}/> */ }
-                                    </div>
-                                </section>
+                    isLoading   ?   <Loading/>
+                                :   <section>
+                                        <div className="container">
+                                            {
+                                                showDevelopers(0, developers.length)
+                                            }
+                                        </div>
+                                        {/* <div className="container">
+                                            {
+                                                showDevelopers(developers.length/2,developers.length)
+                                            }
+                                        </div> */}
+                                    </section>
                 }
                 
             </div>

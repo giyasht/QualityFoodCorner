@@ -21,8 +21,7 @@ const Checkout = (props) => {
 	var productPriceTotal = 0;
 	
 	const getItemPrice = async (prodid) => {
-
-
+		
 		try {
 
 			var product;
@@ -51,12 +50,12 @@ const Checkout = (props) => {
 	useEffect(() => {
 
 		setItemsLength(cartItems.length);
-		
+
 		cartItems.map(async (item) => {
 			await getItemPrice(item);
 		});
 	
-	}, [isLoading]);
+	}, [isLoading, cartItems]) // eslint-disable-line react-hooks/exhaustive-deps
 
 	
 	var offers = {

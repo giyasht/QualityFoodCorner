@@ -64,7 +64,7 @@ const UpdateCategoryDb = () => {
     const SearchCategoryDatabaseForm = () => {
 
         var rowStyles = {
-            width:"70%", 
+            width:"100%", 
             height:"100vh", 
             display:"flex",
             justifyContent:"center",
@@ -98,10 +98,10 @@ const UpdateCategoryDb = () => {
 
             setupdatedCategory({ ...updatedCategory, updatedError: false });
             
-            console.log(user._id);
-            console.log(token);
-            console.log(data._id);
-            console.log(updatedName);
+            // console.log(user._id);
+            // console.log(token);
+            // console.log(data._id);
+            // console.log(updatedName);
 
             const res = await updateCategory(user._id, token, data._id, { ...updatedCategory });
 
@@ -195,7 +195,7 @@ const UpdateCategoryDb = () => {
             <div style={{overflow:"hidden", display:"flex", backgroundColor:"var(--lightblack)"}}>
                 <AdminSideBar/>
 
-                <div style={{display:"block"}}>
+                <div style={{display:"flex"}}>
 
                 {
                     SearchCategoryDatabaseForm()

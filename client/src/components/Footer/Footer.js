@@ -21,7 +21,7 @@ const Footer = () => {
                     <h4>Help</h4>
                     <ul>
                         <li><NavLink to="/#">F.A.Q.</NavLink></li>
-                        <li><a href="https://www.youtube.com/watch?v=PXetEt_hogg&ab_channel=PawanJaiswal" target="_blank" rel="noreferrer">Watch Our Video</a></li>
+                        <li><a href="https://www.youtube.com/watch?v=Dg_2s2XnOfg" target="_blank" rel="noreferrer">Watch Our Video</a></li>
                     </ul>
                 </div>
                 <div className="footer-col">

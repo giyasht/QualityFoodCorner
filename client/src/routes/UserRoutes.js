@@ -13,6 +13,7 @@ import Error404 from '../components/Error404/Error404';
 import DisplayProductOnSearch from '../layouts/SearchPage/DisplayProductOnSearch';
 import StoresOnMap from './../layouts/StoresOnMap/StoresOnMap';
 import AddAddressPage from '../layouts/AddAddressPage/AddAddressPage';
+import ProfilePage from './../layouts/ProfilePage/ProfilePage'
 
 const UserRoutes = [
 
@@ -45,6 +46,9 @@ const UserRoutes = [
 
     // Add Shipping Address
     <Route exact path='/add/address' element={ <AddAddressPage /> } key="addaddress" />,
+
+    // ProfilePage
+    <Route exact path='/profile' element={<ProfilePage />} key="UserProfile" />,
 
     // Error 404
     <Route exact path='*' element={<Error404 />} key="error404" />,

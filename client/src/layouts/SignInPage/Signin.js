@@ -32,17 +32,36 @@ const Signin = () => {
 
             setValues({ ...values, error: false });
 
-            const data = await signin({ email, password });
-
-            if (data.error) {
-                setValues({ ...values, error: data.error})
-            }else{
-                // JWT sets in local storage
-                authenticate(data, () => {
-                    setValues({ ...values, email:'', password:'', didRedirect: true });
+            if (email === '') {
+                Swal.fire({
+                    title: 'User!',
+                    icon: 'error',
+                    text: 'Email is required',
                 })
             }
-                
+
+            else if (password === '') {
+                Swal.fire({
+                    title: 'User!',
+                    icon: 'error',
+                    text: 'Password is required',
+                })
+            }
+
+            else {
+
+                const data = await signin({ email, password });
+
+                if (data.error) {
+                    setValues({ ...values, error: data.error})
+                }else{
+                    // JWT sets in local storage
+                    authenticate(data, () => {
+                        setValues({ ...values, email:'', password:'', didRedirect: true });
+                    })
+                }
+            }
+
         } catch (error) {
             console.log("Signin Failed");
         }
@@ -104,9 +123,9 @@ const Signin = () => {
                     </div>
                     <form className="login-form">
                         <label htmlFor="email">Username</label>
-                        <input type="email" value={email} onChange={handleChange("email")} placeholder="p@gmail.com" id="email"/>
+                        <input type="email" value={email} onChange={handleChange("email")} placeholder="p@gmail.com" id="email" required={true}/>
                         <label htmlFor="password">Password</label>
-                        <input type="password" value={password} onChange={handleChange("password")} placeholder="********" id="password"/>
+                        <input type="password" value={password} onChange={handleChange("password")} placeholder="********" id="password" required={true}/>
                         <button onClick={onSubmit} >Login</button>
                         <p className="message">
                             Not registered? <NavLink to="/signup">Create an account</NavLink>

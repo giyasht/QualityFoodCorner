@@ -76,7 +76,7 @@ const MyCart = () => {
 													<Footer />
 												</>
 											) 
-										: (<EmptyCartPage />)
+										: 	(<EmptyCartPage />)
 			}
 		</>
 	);

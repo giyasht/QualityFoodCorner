@@ -10,8 +10,8 @@ const CreateStore = () => {
     const navigate = useNavigate()
 
     const [values, setValues] = useState({
-        storeId: "0005",
-        address: "Harsul Auranagabad",
+        storeId: "",
+        address: "",
     });
 
     const { storeId, address } = values;

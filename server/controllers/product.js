@@ -330,6 +330,7 @@ exports.photo = (req, res, next) => {
   }
   next();
 };
+
 // @desc Update a Product Stock
 // @route GET /api/offer/all
 // @access Admin
