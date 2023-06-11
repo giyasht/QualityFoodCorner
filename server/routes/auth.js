@@ -3,11 +3,9 @@ const router = express.Router();
 const { signout, signup, signin } = require('../controllers/auth');
 const { check } = require('express-validator');
 
-// @desc Create a User ( SignUp )
+// @desc Register a User ( SignUp )
 // @access Public
-router.post(
-    '/signup',
-
+router.post('/signup',
     // Middlewares to check basic validation of name, lastname, email and password
     [
         check('name','Name must be more than 2 char').isLength({ min: 2 }), 
@@ -28,9 +26,7 @@ router.post(
 
 // @desc Signin a User ( Signin )
 // @access Public
-router.post(
-    '/signin',
-
+router.post('/signin',
     // Middlewares to check basic validation of email and password
     [
         check('email','Invalid Email').isEmail(),

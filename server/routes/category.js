@@ -2,33 +2,27 @@ const express = require("express");
 const router = express.Router();
 const { check } = require('express-validator');
 
-const { getCategoryById, getCategoryByName, createCategory, getCategory, getAllCategory, updateCategory, deleteCategory } = require("../controllers/category");
+const { getCategoryById, createCategory, getCategory, getAllCategory, updateCategory, deleteCategory } = require("../controllers/category");
 const { isSignedin, isAuthenticated, isAdmin } = require("../controllers/auth");
 const { getUserById } = require("../controllers/user");
 
 
 // Params
-router.param("userId", getUserById);
-router.param("catergoryId", getCategoryById);
-router.param("categoryName", getCategoryByName);
-
-
-// @desc Get Category By ID
-// @access Public
-router.get('/category/:catergoryId', getCategory);
-
-// @desc Get Category By Name
-// @access Public
-router.get('/category/name/:categoryName', getCategory);
+router.param('userId', getUserById);
+router.param('categoryId', getCategoryById);
 
 // @desc Get All Categories
 // @access Public
 router.get('/categories', getAllCategory);
 
+// @desc Get Category By Id or Name
+// @access Public
+router.get('/category/:category', getCategory);
+
+
 // @desc Create a Category
 // @access Admin
-router.post(
-    '/category/create/:userId',
+router.post('/category/:userId',
     [
       check('name','Category name is empty').isLength({ min: 1 }), 
     ],
@@ -37,8 +31,7 @@ router.post(
 
 // @desc Update a Category
 // @access Admin
-router.put(
-	'/category/:catergoryId/:userId',
+router.put('/category/:categoryId/:userId',
 	[
 		check('name','Category name is empty').isLength({ min: 1 }), 
 	],
@@ -47,6 +40,8 @@ router.put(
 
 // @desc Delete a Category
 // @access Admin
-router.delete('/category/:catergoryId/:userId', isSignedin, isAuthenticated, isAdmin, deleteCategory);
+router.delete('/category/:categoryId/:userId', 
+	isSignedin, isAuthenticated, isAdmin, deleteCategory
+);
 
 module.exports = router;

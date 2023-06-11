@@ -15,8 +15,8 @@ var offerSchema = new mongoose.Schema(
         },
 
         offerImage: {
-            data: Buffer,
-            contentType: String,
+            type: String,
+            trim: true,
         },
 
         isActive: {

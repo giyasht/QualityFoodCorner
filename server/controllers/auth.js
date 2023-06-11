@@ -21,13 +21,13 @@ exports.signup = async (req,res) => {
         // Validation Results
         const errors = validationResult(req);
         if (!errors.isEmpty()) {
-            return res.status(400).json({ error: errors.array()[0].msg, message:"validation error" });
+            return res.status(400).json({ error: errors.array()[0].msg, message: "Validation Error" });
         }
 
         // Check Email already exists
         const userExists = await User.findOne({email:email});
         if (userExists) {
-            return res.status(422).json({error:"Email already exist"});
+            return res.status(422).json({error:"Email already exists"});
         }
 
         const user = new User(req.body);
