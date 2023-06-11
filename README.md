@@ -37,7 +37,7 @@ npm start
 ### To run through github
 First of all, clone the repository using 
 ```sh
-git clone https://github.com/PawanJaiswal08/QualityFoodCorner.git
+git clone https://github.com/giyasht/QualityFoodCorner.git
 ```
 Now navigate to cloned repository and follow the same steps as given for zip file.
 
@@ -89,15 +89,4 @@ npm run build
 
 ## Project Links
 - Deployed react app (https://hopeful-mccarthy-367b57.netlify.app/)
-- Github (https://github.com/PawanJaiswal08/QualityFoodCorner)
-- Drive video (https://drive.google.com/file/d/1ALBitbOaM1KDuBADjEl2K7NiDnGWLvWy/view?usp=sharing)
-- Youtube (https://www.youtube.com/watch?v=Dg_2s2XnOfg&ab_channel=PawanJaiswal)
 
-## Contributors
-### Group-6
-- Yash Gupta (S20190010197)
-- Pawankumar Jaiswal (S20190010069)
-- Laurel Verma (S20190010109)
-- Rishabh Jha (S20190010150)
-- Vishwesh Dhoble (S20190010191)
-- V. Sai Bhaskar (S20190010188)
