@@ -1,0 +1,25 @@
+rimraf : File C:\Users\Yash Gupta\AppData\Roaming\npm\rimraf.ps1 cannot be loaded because running scripts is 
+disabled on this system. For more information, see about_Execution_Policies at 
+https:/go.microsoft.com/fwlink/?LinkID=135170.
+This error message suggests that running scripts is currently disabled on your system. By default, Windows prevents the execution of PowerShell scripts to protect the system from potential security threats.
+
+To resolve this issue, you need to change the execution policy for PowerShell scripts. Here's how to do it:
+
+Open PowerShell as an administrator. You can do this by searching for "PowerShell" in the Start menu, right-clicking on "Windows PowerShell," and selecting "Run as administrator."
+
+Once PowerShell opens, run the following command:
+
+javascript
+Copy code
+Set-ExecutionPolicy RemoteSigned
+This will allow you to run PowerShell scripts that are locally created, but require remote signatures.
+
+Confirm that you want to change the execution policy by typing "Y" and pressing Enter.
+
+You should now be able to run rimraf command without any issues.
+
+Note: Changing the execution policy can potentially expose your system to security risks. If you are concerned about this, you can reset the execution policy to its default value after you have deleted the node_modules folder. To do this, run the following command in PowerShell as an administrator:
+
+mathematica
+Copy code
+Set-ExecutionPolicy Restricted
