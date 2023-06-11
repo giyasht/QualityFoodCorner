@@ -1,6 +1,6 @@
 import React from 'react'
 import AdminSideBar from '../../components/AdminSideBar/AdminSideBar'
-import admin from './../../../images/admin.svg'
+import admin from './../../../images/admin.png'
 
 const AdminDashboard = () => {
 

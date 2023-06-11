@@ -1,0 +1,1 @@
+react-elastic-carousel causing issues, so not installed. Need to find an alternative.
