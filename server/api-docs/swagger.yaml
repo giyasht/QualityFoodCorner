@@ -8,7 +8,7 @@ servers:
   - url: http://localhost:8000/api
     description: localhost environment
   - url: https://qfc-backend-api.onrender.com/api
-    description: Heroku Hosted Server
+    description: Hosted Server
 
 tags:
   - name: Quality Food Corner
