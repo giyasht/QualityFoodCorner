@@ -54,9 +54,11 @@ exports.createOffer = async (req, res) => {
     // await unlinkFile(file.path);
 
     // console.log(file);
-    const filename = file.filename ? file.filename : "";
+    
+    const filename = file?.filename ? file?.filename : "";
 
-    const offerImage = req.protocol + "://" + req.get("host") + "/uploads/" + filename;
+    // const offerImage = req.protocol + "://" + req.get("host") + "/uploads/" + filename;
+    const offerImage = filename;
     // }
 
     const offer = await Offer.create({ name, feature, offerImage, isActive });
