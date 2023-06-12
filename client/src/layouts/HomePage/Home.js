@@ -2,7 +2,7 @@ import React, { useEffect } from "react";
 import './Home.css'
 import Navbar from './../../components/Navbar/Navbar'
 import Banner from './../../components/Banner/Banner'
-import Carousal from './../../components/Carousal/Carousal'
+// import Carousal from './../../components/Carousal/Carousal'
 import Footer from  './../../components/Footer/Footer'
 import HomepageMenu from './../../components/HomepageMenu/HomepageMenu';
 import Loading from './../../components/Loading/Loading';
@@ -72,7 +72,7 @@ const Home = () => {
                                                     :
                                                         <>
                                                             <Banner/>
-                                                            <Carousal />
+                                                            {/* <Carousal /> */}
                                                             <HomepageMenu/>
                                                         </>
             }

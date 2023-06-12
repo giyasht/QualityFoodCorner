@@ -2,6 +2,7 @@ const mongoose = require('mongoose');
 const { ObjectId } = require('mongodb');
 const Category = require('../models/category');
 const { validationResult } = require('express-validator');
+const { redisClient } = require('./../assets/redis')
 
 // @desc Get a Category By Name
 // @route GET /api/category/:catergory
@@ -105,24 +106,19 @@ exports.getCategory = async (req, res) => {
 // @route POST /api/category/create/:userId
 // @access ADMIN
 exports.createCategory = async (req, res) => {
-
     try {
-
         const errors = validationResult(req);
-
         if (!errors.isEmpty()) {
             return res.status(400).json({ error: errors.array()[0].msg});
         }
         
         const category = new Category(req.body);
-
         const categoryRegistered = await category.save();
 
         if (categoryRegistered) {
-            return res.status(201).json({
-                message: "Category Registered Successfully ...",
-                category: categoryRegistered
-            });
+            res.status(201).json({ category: categoryRegistered });
+            const categories = await Category.find()
+			redisClient.set('allcategories', JSON.stringify(categories))
         }
         else {
             return res.status(500).json({error: "Failed to Register"});
@@ -186,9 +182,9 @@ exports.deleteCategory = async (req, res) => {
         const deletedCategory = await category.remove();
 
         if (deletedCategory) {
-            return res.json({
-                message: `Successfully Deleted ${deletedCategory.name} category`
-            })
+            const categories = await Category.find()
+			redisClient.set('allcategories', JSON.stringify(categories))
+            return res.json({ message: `Successfully Deleted ${deletedCategory.name} category` })
         }
 
     } catch (error) {
@@ -204,21 +200,27 @@ exports.deleteCategory = async (req, res) => {
 // @desc Get All Categories
 // @route GET /api/categories
 // @access Public
+
 exports.getAllCategory = async (req, res) => {
 
-    try {
-        
-        const categories = await Category.find();
+    var data;
+    await redisClient.get(`allcategories`,(err, redisdata) => {
+        if (err) throw err;
+        data = redisdata
+    });
 
-        if (categories) {
-            return res.json({
-                categories: categories
-            });
+    if (data != null) {
+        return res.json({categories: JSON.parse(data)})
+    } else {
+        try {
+            const categories = await Category.find();
+            if (categories) {
+                await redisClient.set('allcategories', JSON.stringify(categories))
+                return res.status(200).json({categories: categories})
+            }
+        } catch (error) {
+            console.log(error);
+            return error
         }
-
-    } catch (error) {
-        return res.json({
-            error: "No categories found"
-        })
     }
 }

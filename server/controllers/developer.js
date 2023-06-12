@@ -3,27 +3,32 @@ const fs = require('fs');
 const { uploadFile, getFileStream } = require('./../assets/s3')
 const util = require('util')
 const unlinkFile = util.promisify(fs.unlink)
+const { redisClient } = require('./../assets/redis')
 
 // @desc Get All Developers
 // @route GET /api/developer/all
 // @access Public
 exports.getAllDevelopers = async (req, res) => {
+
+    var data;
+    await redisClient.get(`alldevelopers`,(err, redisdata) => {
+        if (err) throw err;
+        data = redisdata
+    });
     
-    try {
-        
-        const developers = await Developer.find();
-        // const developers = await Developer.find({}, { name: 1, email: 1, facebook: 1, });
-
-        if(developers){
-            return res.status(200).json({ 
-                developers: developers
-            })
+    if (data != null) {
+        return res.json({developers: JSON.parse(data)})
+    } else {
+        try {
+            const developers = await Developer.find();
+            // const developers = await Developer.find({}, { name: 1, email: 1, facebook: 1, });
+            if(developers){
+                await redisClient.set('alldevelopers', JSON.stringify(developers))
+                return res.status(200).json({ developers: developers })
+            }
+        } catch (error) {
+            return res.status(400).json({ error: error });
         }
-
-    } catch (error) {
-        return res.status(400).json({
-            error: error
-        });
     }
 }
 
@@ -90,6 +95,8 @@ exports.createDeveloper = async (req, res) => {
         const developerCreated = await developer.save()
 
         if (developerCreated) {
+            const developers = await Developer.find()
+			redisClient.set('alldevelopers', JSON.stringify(developers))
             return res.status(201).json(developerCreated)
         }
 
@@ -113,20 +120,16 @@ exports.deleteDeveloper = async (req, res) => {
         const deletedDeveloper = await developer.remove();
 
         if (deletedDeveloper) {
-            return res.json({
-                message: `Successfully Deleted Team Member`
-            })
+            const developers = await Developer.find()
+			redisClient.set('alldevelopers', JSON.stringify(developers))
+            return res.json({ message: `Successfully Deleted Team Member` })
         }
         else {
             return res.status(500).json({error: "Failed to Register"});
         }
     
     } catch (error) {
-
         console.error(error);
-        
-        return res.status(400).json({
-            error: 'Failed to delete'
-        })
+        return res.status(400).json({ error: 'Failed to delete' })
     }
 }
