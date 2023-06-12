@@ -93,9 +93,6 @@ exports.getUser = (req, res) => {
     return res.json(req.profile);
 };
 
-// @desc Get all Users
-// @route GET /admin/users/:adminId
-// @access Public
 exports.getAllUsers = async (req, res) => {
 	try {
 		const users = await User.find();
@@ -248,12 +245,9 @@ exports.checkOutCartItems = async (req, res) => {
     }
 }
 
-// @desc Delete User
-// @route DELETE /admin/user/:adminId/:usrId
-// @access Admin
 exports.deleteUserByAdmin = async (req, res) => {
 	const userId = req.params.usrId;
-	// console.log(userId);
+	console.log(userId);
 	try {
 		const deletedUser = await User.findByIdAndDelete(userId);
 		if (deletedUser) {
@@ -267,8 +261,6 @@ exports.deleteUserByAdmin = async (req, res) => {
 	}
 };
 
-// @desc Update User
-// @access Admin
 exports.updateUserByAdmin = async (req, res) => {
     
     const userId = req.params.usrId;
@@ -322,9 +314,6 @@ exports.updateUserByAdmin = async (req, res) => {
     }
 };
 
-// @desc create user by admin
-//route POST /admin/user/:adminId
-//@access admin
 exports.createUserByAdmin = async (req, res) => {
 	const { name, lastname, email, password } = req.body;
 	if (!name || !lastname || !email || !password) {

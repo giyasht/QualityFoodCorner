@@ -4,6 +4,7 @@ const Category = require("../models/category");
 const formidable = require("formidable");
 const _ = require("lodash");
 const fs = require("fs");
+const { redisClient } = require('./../assets/redis')
 
 // @desc Get Product By ID
 // @route GET /api/product/:productId
@@ -79,26 +80,33 @@ exports.getProductByName = async (req, res, next, name) => {
 // @route GET /api/products
 // @access Public
 exports.getAllProducts = async (req, res) => {
+
+	var data;
+    await redisClient.get(`allproducts?${req.query.limit}`,(err, redisdata) => {
+        if (err) throw err;
+        data = redisdata
+    });
+    
+    if (data != null) {
+        return res.json({products: JSON.parse(data)})
+    }else {
+		try {
+			let limit = req.query.limit ? parseInt(req.query.limit) : 100;
+			let sortBy = req.query.sortBy ? req.query.sortBy : "_id";
 	
-	try {
-		let limit = req.query.limit ? parseInt(req.query.limit) : 100;
-		let sortBy = req.query.sortBy ? req.query.sortBy : "_id";
-
-		const products = await Product.find()
-										.populate("category")
-										.select("-photo")
-										.sort([[sortBy, "asc"]])
-										.limit(limit);
-
-		if (products) {
-			return res.json({ 
-				products: products
-			});
+			const products = await Product.find()
+											.populate("category")
+											.select("-photo")
+											.sort([[sortBy, "asc"]])
+											.limit(limit);
+	
+			if (products) {
+                await redisClient.set(`allproducts?${req.query.limit}`, JSON.stringify(products))
+				return res.json({ products: products });
+			}
+		} catch (error) {
+			return res.status(400).json({ error: "No products found" });
 		}
-	} catch (error) {
-		return res.status(400).json({
-			error: "No products found",
-		});
 	}
 };
 
@@ -273,6 +281,8 @@ exports.createProduct = async (req, res) => {
 		const productCreated = await product.save();
 
 		if (productCreated) {
+			const products = await Product.find()
+			redisClient.set('allproducts', JSON.stringify(products))
 			res.json(productCreated);
 		}
 		});
@@ -331,9 +341,9 @@ exports.deleteProduct = async (req, res) => {
 		const deletedProduct = await product.remove();
 
 		if (deletedProduct) {
-			return res.status(204).json({
-				message: `Successfully Deleted ${deletedProduct.name} Product`,
-			});
+			const products = await Product.find()
+			redisClient.set('allproducts', JSON.stringify(products))
+			return res.status(204).json({ message: `Successfully Deleted ${deletedProduct.name} Product` });
 		}
 
     } catch (error) {

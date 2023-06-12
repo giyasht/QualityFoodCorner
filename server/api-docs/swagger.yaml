@@ -7,8 +7,8 @@ info:
 servers:
   - url: http://localhost:8000/api
     description: localhost environment
-  - url: https://mighty-spire-51439.herokuapp.com/api
-    description: Heroku Hosted Server
+  - url: https://qfc-backend-api.onrender.com/api
+    description: Hosted Server
 
 tags:
   - name: Quality Food Corner
@@ -465,6 +465,87 @@ paths:
               schema:
                 $ref: "#definitions/User"
 
+  /user/add/cartItem/{userId}:
+    put:
+      tags:
+        - User
+      summary: Add product to cart
+      security:
+        - APIKey: []
+      parameters:
+        - in: path
+          name: userId
+          default: "6195f66e996a1cb655a4d4fc"
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      requestBody:
+        description: enter product id
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                productId: 
+                  type: string
+      responses:
+        "200":
+          description: Added item to cart
+        "400":
+          description: You are not allowed to update this info
+
+  /user/remove/cartItem/{userId}:
+    put:
+      tags:
+        - User
+      summary: Delete product from cart
+      security:
+        - APIKey: []
+      parameters:
+        - in: path
+          name: userId
+          default: "6195f66e996a1cb655a4d4fc"
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      requestBody:
+        description: enter product id
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                productId: 
+                  type: string
+      responses:
+        "200":
+          description: Removed item to cart
+        "400":
+          description: You are not allowed to update this info
+
+  /user/checkout/cartItem/{userId}:
+    put:
+      tags:
+        - User
+      summary: Delete product from cart
+      security:
+        - APIKey: []
+      parameters:
+        - in: path
+          name: userId
+          default: "6195f66e996a1cb655a4d4fc"
+      produces:
+        - application/json
+      responses:
+        "200":
+          description: Removed item to cart
+        "400":
+          description: You are not allowed to update this info
+
   /categories:
     get:
       tags: [Category]
@@ -818,6 +899,24 @@ paths:
           in: path
           schema:
             type: string
+      security:
+        - APIKey: []
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      requestBody:
+        description: add a product
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                storeId:
+                  type: string
+                address:
+                  type: string
       responses:
         "200":
           description: returns store by id
